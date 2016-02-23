@@ -25,7 +25,12 @@ class Entity: public sf::Drawable {
       RIGHT, UP, LEFT, DOWN
     };
     enum Action {
-      LOOK_RIGHT, LOOK_UP, LOOK_LEFT, LOOK_DOWN, MOVE_RIGHT, MOVE_UP, MOVE_LEFT, MOVE_DOWN, WAIT, HIDE, SHOW
+      LOOK_RIGHT, LOOK_UP, LOOK_LEFT, LOOK_DOWN,
+      MOVE_RIGHT, MOVE_UP, MOVE_LEFT, MOVE_DOWN,
+      JUMP_RIGHT, JUMP_UP, JUMP_LEFT, JUMP_DOWN,
+      WAIT,
+      HIDE,
+      SHOW
     };
     enum Behaviour {
       NONE, LOOK_RANDOM

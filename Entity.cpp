@@ -37,6 +37,7 @@ Entity::~Entity() {
 void Entity::update(float delta, LevelData* data) {
   if (!action_queue.empty()) {
     ActionPair ap = action_queue.front();
+
     if (action_step == 0) {
       switch (ap.first) {
         case LOOK_UP:
@@ -56,6 +57,7 @@ void Entity::update(float delta, LevelData* data) {
         break;
 
         case MOVE_UP:
+        case JUMP_UP:
         facing = UP;
         prev_y = y;
         y -= 1;
@@ -63,6 +65,7 @@ void Entity::update(float delta, LevelData* data) {
         break;
 
         case MOVE_LEFT:
+        case JUMP_LEFT:
         facing = LEFT;
         prev_x = x;
         x -= 1;
@@ -70,6 +73,7 @@ void Entity::update(float delta, LevelData* data) {
         break;
 
         case MOVE_DOWN:
+        case JUMP_DOWN:
         facing = DOWN;
         prev_y = y;
         y += 1;
@@ -77,6 +81,7 @@ void Entity::update(float delta, LevelData* data) {
         break;
 
         case MOVE_RIGHT:
+        case JUMP_RIGHT:
         facing = RIGHT;
         prev_x = x;
         x += 1;
@@ -135,6 +140,10 @@ bool Entity::canMove(int xx, int yy, LevelData* data) {
   byte m = data->movement[cl(x + xx, data->width)][cl(y + yy, data->height)];
   byte f = data->floors[cl(x + xx, data->width)][cl(y + yy, data->height)];
   if (m == LevelData::BLOCKED || ((m == LevelData::SURF || m == LevelData::WATERFALL) && (m != movement))) {
+    return false;
+  }
+  if ((m == LevelData::LEDGE_R && xx != 1) || (m == LevelData::LEDGE_T && yy != -1) ||
+      (m == LevelData::LEDGE_L && xx != -1) || (m == LevelData::LEDGE_B && yy != 1)) {
     return false;
   }
   return (f & floor);

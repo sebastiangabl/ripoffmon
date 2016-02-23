@@ -44,7 +44,7 @@ int main() {
     }
     delta = delta_clock.restart().asSeconds();
 
-    p.movement(level->data, Keyboard::isKeyPressed(Keyboard::Up), Keyboard::isKeyPressed(Keyboard::Left),
+    p.actions(level->data, Keyboard::isKeyPressed(Keyboard::Up), Keyboard::isKeyPressed(Keyboard::Left),
         Keyboard::isKeyPressed(Keyboard::Down), Keyboard::isKeyPressed(Keyboard::Right),
         Keyboard::isKeyPressed(Keyboard::LShift));
     p.update(delta, level->data);

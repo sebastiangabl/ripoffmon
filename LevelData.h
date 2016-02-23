@@ -13,7 +13,7 @@
 class LevelData {
   public:
     enum Movement {
-      BLOCKED = 0, FLOOR, SURF, WATERFALL
+      BLOCKED = 0, FLOOR, SURF, WATERFALL, LEDGE_R, LEDGE_T, LEDGE_L, LEDGE_B
     };
     enum Floor {
       SEPERATE = 1, FLOOR1 = 2, FLOOR2 = 4, FLOOR3 = 8, FLOOR4 = 16
