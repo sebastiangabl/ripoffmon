@@ -17,7 +17,8 @@ int main() {
   Level* level = LevelManager::getCurrentLevel();
 
   Player p(level->data->width / 2, level->data->height / 2);
-  p.floor = level->data->floors[p.x][p.y];
+  p.movement = level->data->movement[p.x][p.y];
+  p.on_floor = level->data->floors[p.x][p.y];
 
   float delta = 0;
   Clock delta_clock;
@@ -52,27 +53,27 @@ int main() {
     if (p.y < 0 && level->neighbour[Neighbour::TOP].id != 0) {
       Level* nlev = LevelManager::changeLevel(level->neighbour[Neighbour::TOP].id);
       p.move(-level->neighbour[Neighbour::TOP].offset, nlev->data->height);
-      p.floor = nlev->data->floors[p.x][p.y];
+      p.on_floor = nlev->data->floors[p.x][p.y];
       level = nlev;
     } else if (p.y > level->data->height - 1 && level->neighbour[Neighbour::BOTTOM].id != 0) {
       Level* nlev = LevelManager::changeLevel(level->neighbour[Neighbour::BOTTOM].id);
       p.move(-level->neighbour[Neighbour::BOTTOM].offset, -level->data->height);
-      p.floor = nlev->data->floors[p.x][p.y];
+      p.on_floor = nlev->data->floors[p.x][p.y];
       level = nlev;
     } else if (p.x < 0 && level->neighbour[Neighbour::LEFT].id != 0) {
       Level* nlev = LevelManager::changeLevel(level->neighbour[Neighbour::LEFT].id);
       p.move(nlev->data->width, -level->neighbour[Neighbour::LEFT].offset);
-      p.floor = nlev->data->floors[p.x][p.y];
+      p.on_floor = nlev->data->floors[p.x][p.y];
       level = nlev;
     } else if (p.x > level->data->width - 1 && level->neighbour[Neighbour::RIGHT].id != 0) {
       Level* nlev = LevelManager::changeLevel(level->neighbour[Neighbour::RIGHT].id);
       p.move(-level->data->width, -level->neighbour[Neighbour::RIGHT].offset);
-      p.floor = nlev->data->floors[p.x][p.y];
+      p.on_floor = nlev->data->floors[p.x][p.y];
       level = nlev;
     }
 
-    view.setCenter((p.prev_x * (1 - p.action_step) + p.x * p.action_step) * 24,
-        (p.prev_y * (1 - p.action_step) + p.y * p.action_step) * 24);
+    view.setCenter(round((p.prev_x * (1 - p.action_step) + p.x * p.action_step) * 24),
+        round((p.prev_y * (1 - p.action_step) + p.y * p.action_step) * 24));
     render_target.setView(view);
 
     render_target.clear(Color::Black);

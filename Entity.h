@@ -40,7 +40,7 @@ class Entity: public sf::Drawable {
     float action_step;
     Direction facing;
     Behaviour behaviour;
-    byte floor;
+    byte on_floor;
     byte movement;
     bool blocking;
     bool visible;

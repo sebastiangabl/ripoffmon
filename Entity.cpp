@@ -24,7 +24,7 @@ Entity::Entity(int xx, int yy) {
   action_step = 0;
   facing = DOWN;
   behaviour = NONE;
-  floor = LevelData::FLOOR1;
+  on_floor = LevelData::FLOOR1;
   movement = LevelData::FLOOR;
   blocking = true;
   visible = true;
@@ -116,7 +116,7 @@ void Entity::updateFloor(LevelData* data) {
     return;
   } else {
     if (!(data->floors[x][y] & LevelData::SEPERATE)) {
-      floor = data->floors[x][y];
+      on_floor = data->floors[x][y];
     }
     movement = data->movement[x][y];
   }
@@ -146,7 +146,7 @@ bool Entity::canMove(int xx, int yy, LevelData* data) {
       (m == LevelData::LEDGE_L && xx != -1) || (m == LevelData::LEDGE_B && yy != 1)) {
     return false;
   }
-  return (f & floor);
+  return (f & on_floor);
 }
 
 void Entity::draw(sf::RenderTarget& rt, sf::RenderStates rs) const {

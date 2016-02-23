@@ -69,16 +69,16 @@ void Player::draw(sf::RenderTarget& rt, sf::RenderStates rs) const {
   CircleShape cshp(12, 12);
   cshp.setOrigin(12, 12);
   cshp.setScale(1, 0.5);
-  cshp.setPosition((prev_x * (1 - action_step) + x * action_step) * 24 + 12,
-      (prev_y * (1 - action_step) + y * action_step) * 24 + 12 + 6);
+  cshp.setPosition(round((prev_x * (1 - action_step) + x * action_step) * 24 + 12),
+      round((prev_y * (1 - action_step) + y * action_step) * 24 + 12 + 6));
   cshp.setFillColor(Color(0, 0, 0, 100));
   rt.draw(cshp, rs);
 
   RectangleShape shp(Vector2f(24, 40));
   shp.setOrigin(12, 28);
-  shp.setPosition((prev_x * (1 - action_step) + x * action_step) * 24 + 12,
-      (prev_y * (1 - action_step) + y * action_step) * 24 + 12 + off);
-  shp.setFillColor(Color(floor * 100, 0, 255));
+  shp.setPosition(round((prev_x * (1 - action_step) + x * action_step) * 24 + 12),
+      round((prev_y * (1 - action_step) + y * action_step) * 24 + 12 + off));
+  shp.setFillColor(Color(on_floor * 100, 0, 255));
   rt.draw(shp, rs);
 
   cshp.setRadius(8);
@@ -86,8 +86,8 @@ void Player::draw(sf::RenderTarget& rt, sf::RenderStates rs) const {
   cshp.setOrigin(8, 8);
   cshp.setScale(1, 1);
   cshp.setRotation(90 - facing * 90);
-  cshp.setPosition((prev_x * (1 - action_step) + x * action_step) * 24 + 12,
-      (prev_y * (1 - action_step) + y * action_step) * 24 + 12 + off);
+  cshp.setPosition(round((prev_x * (1 - action_step) + x * action_step) * 24 + 12),
+      round((prev_y * (1 - action_step) + y * action_step) * 24 + 12 + off));
   cshp.setFillColor(Color(0, 0, 0, 100));
   rt.draw(cshp, rs);
 }
