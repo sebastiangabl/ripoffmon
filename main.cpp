@@ -17,8 +17,7 @@ int main() {
   Level* level = LevelManager::getCurrentLevel();
 
   Player p(level->data->width / 2, level->data->height / 2);
-  p.movement = level->data->movement[p.x][p.y];
-  p.on_floor = level->data->floors[p.x][p.y];
+  p.updateFloor(level->data);
 
   float delta = 0;
   Clock delta_clock;
@@ -50,24 +49,24 @@ int main() {
         Keyboard::isKeyPressed(Keyboard::LShift));
     p.update(delta, level->data);
 
-    if (p.y < 0 && level->neighbour[Neighbour::TOP].id != 0) {
-      Level* nlev = LevelManager::changeLevel(level->neighbour[Neighbour::TOP].id);
-      p.move(-level->neighbour[Neighbour::TOP].offset, nlev->data->height);
+    if (p.y < 0 && level->neighbour[Level::Neighbour::TOP].id != 0) {
+      Level* nlev = LevelManager::changeLevel(level->neighbour[Level::Neighbour::TOP].id);
+      p.move(-level->neighbour[Level::Neighbour::TOP].offset, nlev->data->height);
       p.on_floor = nlev->data->floors[p.x][p.y];
       level = nlev;
-    } else if (p.y > level->data->height - 1 && level->neighbour[Neighbour::BOTTOM].id != 0) {
-      Level* nlev = LevelManager::changeLevel(level->neighbour[Neighbour::BOTTOM].id);
-      p.move(-level->neighbour[Neighbour::BOTTOM].offset, -level->data->height);
+    } else if (p.y > level->data->height - 1 && level->neighbour[Level::Neighbour::BOTTOM].id != 0) {
+      Level* nlev = LevelManager::changeLevel(level->neighbour[Level::Neighbour::BOTTOM].id);
+      p.move(-level->neighbour[Level::Neighbour::BOTTOM].offset, -level->data->height);
       p.on_floor = nlev->data->floors[p.x][p.y];
       level = nlev;
-    } else if (p.x < 0 && level->neighbour[Neighbour::LEFT].id != 0) {
-      Level* nlev = LevelManager::changeLevel(level->neighbour[Neighbour::LEFT].id);
-      p.move(nlev->data->width, -level->neighbour[Neighbour::LEFT].offset);
+    } else if (p.x < 0 && level->neighbour[Level::Neighbour::LEFT].id != 0) {
+      Level* nlev = LevelManager::changeLevel(level->neighbour[Level::Neighbour::LEFT].id);
+      p.move(nlev->data->width, -level->neighbour[Level::Neighbour::LEFT].offset);
       p.on_floor = nlev->data->floors[p.x][p.y];
       level = nlev;
-    } else if (p.x > level->data->width - 1 && level->neighbour[Neighbour::RIGHT].id != 0) {
-      Level* nlev = LevelManager::changeLevel(level->neighbour[Neighbour::RIGHT].id);
-      p.move(-level->data->width, -level->neighbour[Neighbour::RIGHT].offset);
+    } else if (p.x > level->data->width - 1 && level->neighbour[Level::Neighbour::RIGHT].id != 0) {
+      Level* nlev = LevelManager::changeLevel(level->neighbour[Level::Neighbour::RIGHT].id);
+      p.move(-level->data->width, -level->neighbour[Level::Neighbour::RIGHT].offset);
       p.on_floor = nlev->data->floors[p.x][p.y];
       level = nlev;
     }

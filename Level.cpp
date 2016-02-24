@@ -15,6 +15,7 @@ using namespace std;
 using namespace sf;
 
 Level::Level(unsigned short i) {
+  loaded = false;
   id = i;
   data = 0;
 }
@@ -47,6 +48,7 @@ bool Level::load(const char* fname) {
     f.read<byte>();
   }
   f.close();
+  loaded = true;
   return true;
 }
 

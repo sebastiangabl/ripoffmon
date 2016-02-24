@@ -22,6 +22,17 @@ using std::map;
 
 class Level: public sf::Drawable {
   public:
+    class Neighbour {
+      public:
+        enum Direction {
+          RIGHT = 0, TOP, LEFT, BOTTOM
+        };
+        unsigned short id;
+        short offset;
+        Neighbour(unsigned short i = 0, short off = 0) : id(i), offset(off) {}
+    };
+
+    bool loaded;
     unsigned short id;
     LevelData* data;
     vector<Entity*> entities;

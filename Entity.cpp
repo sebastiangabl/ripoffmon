@@ -28,6 +28,7 @@ Entity::Entity(int xx, int yy) {
   movement = LevelData::FLOOR;
   blocking = true;
   visible = true;
+  flag = 0;
 }
 
 Entity::~Entity() {

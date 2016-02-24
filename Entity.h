@@ -44,6 +44,7 @@ class Entity: public sf::Drawable {
     byte movement;
     bool blocking;
     bool visible;
+    unsigned short flag;
 
     Entity(int = 0, int = 0);
     virtual ~Entity();

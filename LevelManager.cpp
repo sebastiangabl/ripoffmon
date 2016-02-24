@@ -8,19 +8,31 @@
 #include "LevelManager.h"
 #include "utils/StringConverter.h"
 #include <iostream>
+#include <thread>
 
 using namespace std;
 
 map<unsigned, Level*> LevelManager::id_map;
 unsigned LevelManager::current_level = 1;
 
-Level* LevelManager::getLevel(unsigned id) {
+Level* LevelManager::getLevel(unsigned id, bool load_neighbours) {
+  if (!id) {
+    return 0;
+  }
   if (id_map.find(id) == id_map.end()) {
     Level* l = new Level(id);
     if (!l->load(string("leveldata/" + typeToString(id) + ".dat").c_str())) {
-      cerr << "WARNING: Level " << id << " could not be loaded!\n";
+      cerr << "[Thread" << this_thread::get_id() << "] ERROR: Level " << id << " could not be loaded!\n";
+    } else {
+      cout << "[Thread" << this_thread::get_id() << "] INFO: Level " << id << " loaded.\n";
     }
     id_map[id] = l;
+  }
+  if (load_neighbours) {
+    thread(&LevelManager::getLevel, id_map[id]->neighbour[Level::Neighbour::RIGHT].id, false).detach();
+    thread(&LevelManager::getLevel, id_map[id]->neighbour[Level::Neighbour::TOP].id, false).detach();
+    thread(&LevelManager::getLevel, id_map[id]->neighbour[Level::Neighbour::LEFT].id, false).detach();
+    thread(&LevelManager::getLevel, id_map[id]->neighbour[Level::Neighbour::BOTTOM].id, false).detach();
   }
   return id_map[id];
 }
