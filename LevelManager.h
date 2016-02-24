@@ -17,8 +17,9 @@ class LevelManager {
   private:
     static map<unsigned, Level*> id_map;
     static unsigned current_level;
+    static void loadLevel(Level*);
   public:
-    static Level* getLevel(unsigned, bool = true);
+    static Level* getLevel(unsigned, bool = false);
     static Level* getCurrentLevel();
     static Level* changeLevel(unsigned);
 

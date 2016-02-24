@@ -14,14 +14,19 @@
 #include "Entity.h"
 #include "LevelData.h"
 #include "defines.h"
-#include <SFML/Graphics/Drawable.hpp>
+#include <SFML/Graphics/RenderTexture.hpp>
+#include <SFML/Graphics/Texture.hpp>
 
 using std::string;
 using std::vector;
 using std::map;
+using sf::RenderTexture;
+using sf::Texture;
 
-class Level: public sf::Drawable {
+class Level {
   public:
+    static Texture debug_texture;
+
     class Neighbour {
       public:
         enum Direction {
@@ -32,6 +37,7 @@ class Level: public sf::Drawable {
         Neighbour(unsigned short i = 0, short off = 0) : id(i), offset(off) {}
     };
 
+    RenderTexture texture_back, texture_front;
     bool loaded;
     unsigned short id;
     LevelData* data;
@@ -44,7 +50,7 @@ class Level: public sf::Drawable {
     bool load(const char*);
     void save(const char*);
 
-    virtual void draw(sf::RenderTarget&, sf::RenderStates) const;
+    void render();
 };
 
 #endif /* LEVEL_H_ */

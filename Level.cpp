@@ -14,6 +14,8 @@
 using namespace std;
 using namespace sf;
 
+Texture Level::debug_texture;
+
 Level::Level(unsigned short i) {
   loaded = false;
   id = i;
@@ -33,6 +35,8 @@ bool Level::load(const char* fname) {
   unsigned short width = f.read<unsigned short>();
   unsigned short height = f.read<unsigned short>();
 
+  texture_back.create(width * 24, height * 24);
+  texture_front.create(width * 24, height * 24);
   data = new LevelData(width, height);
 
   // Neighbours
@@ -52,7 +56,11 @@ bool Level::load(const char* fname) {
   return true;
 }
 
-void Level::draw(RenderTarget& rt, RenderStates rs) const {
+void Level::render() {
+  if (!loaded) {
+    return;
+  }
+  texture_back.clear(Color::Magenta);
   VertexArray va(Quads, data->width * data->height * 4);
   for (unsigned i = 0; i < (unsigned) data->width * (unsigned) data->height; i++) {
     va[i * 4 + 0].position = Vector2f(i % data->width, i / data->width) * 24.f;
@@ -74,5 +82,6 @@ void Level::draw(RenderTarget& rt, RenderStates rs) const {
     va[i * 4 + 2].texCoords = Vector2f(24 * m + 24, 24);
     va[i * 4 + 3].texCoords = Vector2f(24 * m + 24, 0);
   }
-  rt.draw(va, rs);
+  texture_back.draw(va, &debug_texture);
+  texture_back.display();
 }

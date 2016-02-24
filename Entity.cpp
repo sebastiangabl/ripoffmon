@@ -6,6 +6,7 @@
  */
 
 #include "Entity.h"
+#include "Flags.h"
 
 unsigned cl(int a, unsigned b) {
   if (a < 0) {
@@ -16,7 +17,8 @@ unsigned cl(int a, unsigned b) {
   return a;
 }
 
-Entity::Entity(int xx, int yy) {
+Entity::Entity(unsigned short i, short xx, short yy) {
+  id = i;
   prev_x = xx;
   prev_y = yy;
   x = xx;
@@ -28,6 +30,7 @@ Entity::Entity(int xx, int yy) {
   movement = LevelData::FLOOR;
   blocking = true;
   visible = true;
+  warp = 0;
   flag = 0;
 }
 
@@ -36,6 +39,9 @@ Entity::~Entity() {
 }
 
 void Entity::update(float delta, LevelData* data) {
+  if (Flags::get(flag)) {
+    return;
+  }
   if (!action_queue.empty()) {
     ActionPair ap = action_queue.front();
 
@@ -113,6 +119,9 @@ void Entity::update(float delta, LevelData* data) {
 }
 
 void Entity::updateFloor(LevelData* data) {
+  if (Flags::get(flag)) {
+    return;
+  }
   if (x < 0 || unsigned(x) >= data->width || y < 0 || unsigned(y) >= data->height) {
     return;
   } else {
@@ -143,8 +152,8 @@ bool Entity::canMove(int xx, int yy, LevelData* data) {
   if (m == LevelData::BLOCKED || ((m == LevelData::SURF || m == LevelData::WATERFALL) && (m != movement))) {
     return false;
   }
-  if ((m == LevelData::LEDGE_R && xx != 1) || (m == LevelData::LEDGE_T && yy != -1) ||
-      (m == LevelData::LEDGE_L && xx != -1) || (m == LevelData::LEDGE_B && yy != 1)) {
+  if ((m == LevelData::LEDGE_R && xx != 1) || (m == LevelData::LEDGE_T && yy != -1)
+      || (m == LevelData::LEDGE_L && xx != -1) || (m == LevelData::LEDGE_B && yy != 1)) {
     return false;
   }
   return (f & on_floor);

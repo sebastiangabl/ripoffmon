@@ -7,6 +7,7 @@
 
 #include "LevelManager.h"
 #include "Player.h"
+#include "Scene.h"
 #include <SFML/Graphics.hpp>
 #include <iostream>
 
@@ -14,7 +15,7 @@ using namespace std;
 using namespace sf;
 
 int main() {
-  Level* level = LevelManager::getCurrentLevel();
+  Level* level = LevelManager::getLevel(1);
 
   Player p(level->data->width / 2, level->data->height / 2);
   p.updateFloor(level->data);
@@ -25,15 +26,9 @@ int main() {
   RenderWindow win(VideoMode(1280, 720), "Ripoffmon", Style::Titlebar | Style::Close);
   win.setFramerateLimit(0);
   win.setVerticalSyncEnabled(true);
-  View view(sf::Vector2f(p.x * 24, p.y * 24), sf::Vector2f(640, 360));
-  RenderTexture render_target;
-  render_target.create(view.getSize().x, view.getSize().y);
-  Sprite render_sprite(render_target.getTexture());
-  render_sprite.setScale(float(win.getSize().x) / float(render_target.getSize().x),
-      float(win.getSize().y) / float(render_target.getSize().y));
+  Scene scene(640, 360);
 
-  Texture tex_debug;
-  tex_debug.loadFromFile("tilesets/debug.png");
+  Level::debug_texture.loadFromFile("tilesets/debug.png");
 
   while (win.isOpen()) {
     Event e;
@@ -52,35 +47,27 @@ int main() {
     if (p.y < 0 && level->neighbour[Level::Neighbour::TOP].id != 0) {
       Level* nlev = LevelManager::changeLevel(level->neighbour[Level::Neighbour::TOP].id);
       p.move(-level->neighbour[Level::Neighbour::TOP].offset, nlev->data->height);
-      p.on_floor = nlev->data->floors[p.x][p.y];
+      p.updateFloor(nlev->data);
       level = nlev;
     } else if (p.y > level->data->height - 1 && level->neighbour[Level::Neighbour::BOTTOM].id != 0) {
       Level* nlev = LevelManager::changeLevel(level->neighbour[Level::Neighbour::BOTTOM].id);
       p.move(-level->neighbour[Level::Neighbour::BOTTOM].offset, -level->data->height);
-      p.on_floor = nlev->data->floors[p.x][p.y];
+      p.updateFloor(nlev->data);
       level = nlev;
     } else if (p.x < 0 && level->neighbour[Level::Neighbour::LEFT].id != 0) {
       Level* nlev = LevelManager::changeLevel(level->neighbour[Level::Neighbour::LEFT].id);
       p.move(nlev->data->width, -level->neighbour[Level::Neighbour::LEFT].offset);
-      p.on_floor = nlev->data->floors[p.x][p.y];
+      p.updateFloor(nlev->data);
       level = nlev;
     } else if (p.x > level->data->width - 1 && level->neighbour[Level::Neighbour::RIGHT].id != 0) {
       Level* nlev = LevelManager::changeLevel(level->neighbour[Level::Neighbour::RIGHT].id);
       p.move(-level->data->width, -level->neighbour[Level::Neighbour::RIGHT].offset);
-      p.on_floor = nlev->data->floors[p.x][p.y];
+      p.updateFloor(nlev->data);
       level = nlev;
     }
 
-    view.setCenter(round((p.prev_x * (1 - p.action_step) + p.x * p.action_step) * 24),
-        round((p.prev_y * (1 - p.action_step) + p.y * p.action_step) * 24));
-    render_target.setView(view);
-
-    render_target.clear(Color::Black);
-    render_target.draw(*level, &tex_debug);
-    render_target.draw(p);
-    render_target.display();
-
-    win.draw(render_sprite);
+    scene.render(LevelManager::getCurrentLevel(), &p);
+    win.draw(scene);
     win.display();
   }
   LevelManager::free();

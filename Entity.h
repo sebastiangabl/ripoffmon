@@ -35,7 +35,8 @@ class Entity: public sf::Drawable {
     enum Behaviour {
       NONE, LOOK_RANDOM
     };
-    int prev_x, prev_y, x, y;
+    unsigned short id;
+    short prev_x, prev_y, x, y;
     queue<ActionPair> action_queue;
     float action_step;
     Direction facing;
@@ -44,9 +45,9 @@ class Entity: public sf::Drawable {
     byte movement;
     bool blocking;
     bool visible;
-    unsigned short flag;
+    unsigned short warp, flag;
 
-    Entity(int = 0, int = 0);
+    Entity(unsigned short, short = 0, short = 0);
     virtual ~Entity();
     void update(float, LevelData*);
     void updateFloor(LevelData*);
