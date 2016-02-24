@@ -48,8 +48,8 @@ bool Level::load(const char* fname) {
   for (unsigned i = 0; i < (unsigned) width * (unsigned) height; i++) {
     data->movement[i % width][i / width] = f.read<byte>();
     data->floors[i % width][i / width] = f.read<byte>();
-    f.read<byte>();
-    f.read<byte>();
+    data->tiles_back[i % width][i / width] = f.read<byte>();
+    data->tiles_front[i % width][i / width] = f.read<byte>();
   }
   f.close();
   loaded = true;

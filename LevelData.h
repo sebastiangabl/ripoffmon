@@ -13,7 +13,9 @@
 class LevelData {
   public:
     enum Movement {
-      BLOCKED = 0, FLOOR, SURF, WATERFALL, LEDGE_R, LEDGE_T, LEDGE_L, LEDGE_B
+      BLOCKED = 0, FLOOR, SURF, WATERFALL,
+      LEDGE_RIGHT, LEDGE_UP, LEDGE_LEFT, LEDGE_DOWN,
+      PUSH_RIGHT, PUSH_UP, PUSH_LEFT, PUSH_DOWN
     };
     enum Floor {
       SEPERATE = 1, FLOOR1 = 2, FLOOR2 = 4, FLOOR3 = 8, FLOOR4 = 16
@@ -21,8 +23,8 @@ class LevelData {
     unsigned short width, height;
     byte** movement;
     byte** floors;
-    byte** tiles;
-    byte** flags;
+    byte** tiles_back;
+    byte** tiles_front;
     LevelData(unsigned short, unsigned short);
     ~LevelData();
 };

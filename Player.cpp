@@ -12,7 +12,8 @@
 using namespace std;
 using namespace sf;
 
-Player::Player(int xx, int yy) : Entity(1, xx, yy) {
+Player::Player(int xx, int yy) :
+    Entity(1, xx, yy) {
 
 }
 
@@ -21,38 +22,60 @@ void Player::actions(LevelData* data, bool up, bool left, bool down, bool right,
     return;
   }
 
-  if (movement == LevelData::LEDGE_R) {
+  switch (movement) {
+    case LevelData::LEDGE_RIGHT:
     action_queue.push(ActionPair(JUMP_RIGHT, 1));
-  } else if (movement == LevelData::LEDGE_T) {
+    break;
+    case LevelData::LEDGE_UP:
     action_queue.push(ActionPair(JUMP_UP, 1));
-  } else if (movement == LevelData::LEDGE_L) {
+    break;
+    case LevelData::LEDGE_LEFT:
     action_queue.push(ActionPair(JUMP_LEFT, 1));
-  } else if (movement == LevelData::LEDGE_B) {
+    break;
+    case LevelData::LEDGE_DOWN:
     action_queue.push(ActionPair(JUMP_DOWN, 1));
-  } else if (up) {
-    if (canMove(0, -1, data) && facing == UP) {
-      action_queue.push(ActionPair(MOVE_UP, 1.5 + 1.5 * run));
-    } else {
-      action_queue.push(ActionPair(LOOK_UP, 4));
+    break;
+
+    case LevelData::PUSH_RIGHT:
+    action_queue.push(ActionPair(MOVE_RIGHT, 2));
+    break;
+    case LevelData::PUSH_UP:
+    action_queue.push(ActionPair(MOVE_UP, 2));
+    break;
+    case LevelData::PUSH_LEFT:
+    action_queue.push(ActionPair(MOVE_LEFT, 2));
+    break;
+    case LevelData::PUSH_DOWN:
+    action_queue.push(ActionPair(MOVE_DOWN, 2));
+    break;
+
+    default:
+    if (up) {
+      if (canMove(0, -1, data) && facing == UP) {
+        action_queue.push(ActionPair(MOVE_UP, 1.5 + 1.5 * run));
+      } else {
+        action_queue.push(ActionPair(LOOK_UP, 4));
+      }
+    } else if (left) {
+      if (canMove(-1, 0, data) && facing == LEFT) {
+        action_queue.push(ActionPair(MOVE_LEFT, 1.5 + 1.5 * run));
+      } else {
+        action_queue.push(ActionPair(LOOK_LEFT, 4));
+      }
+    } else if (down) {
+      if (canMove(0, 1, data) && facing == DOWN) {
+        action_queue.push(ActionPair(MOVE_DOWN, 1.5 + 1.5 * run));
+      } else {
+        action_queue.push(ActionPair(LOOK_DOWN, 4));
+      }
+    } else if (right) {
+      if (canMove(1, 0, data) && facing == RIGHT) {
+        action_queue.push(ActionPair(MOVE_RIGHT, 1.5 + 1.5 * run));
+      } else {
+        action_queue.push(ActionPair(LOOK_RIGHT, 4));
+      }
     }
-  } else if (left) {
-    if (canMove(-1, 0, data) && facing == LEFT) {
-      action_queue.push(ActionPair(MOVE_LEFT, 1.5 + 1.5 * run));
-    } else {
-      action_queue.push(ActionPair(LOOK_LEFT, 4));
-    }
-  } else if (down) {
-    if (canMove(0, 1, data) && facing == DOWN) {
-      action_queue.push(ActionPair(MOVE_DOWN, 1.5 + 1.5 * run));
-    } else {
-      action_queue.push(ActionPair(LOOK_DOWN, 4));
-    }
-  } else if (right) {
-    if (canMove(1, 0, data) && facing == RIGHT) {
-      action_queue.push(ActionPair(MOVE_RIGHT, 1.5 + 1.5 * run));
-    } else {
-      action_queue.push(ActionPair(LOOK_RIGHT, 4));
-    }
+    break;
   }
 }
 
@@ -60,7 +83,7 @@ void Player::draw(sf::RenderTarget& rt, sf::RenderStates rs) const {
   short off = 0;
   if (!action_queue.empty()) {
     ActionPair ap = action_queue.front();
-    if (ap.first == JUMP_DOWN || ap.first == JUMP_LEFT || ap.first == JUMP_RIGHT || ap.first == JUMP_UP) {
+    if (ap.first >= JUMP_RIGHT && ap.first <= JUMP_DOWN) {
       off = -12 * (1 - abs((action_step - 0.5) * 2));
     }
   }

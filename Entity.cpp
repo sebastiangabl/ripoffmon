@@ -113,8 +113,8 @@ void Entity::update(float delta, LevelData* data) {
       prev_x = x;
       prev_y = y;
     }
-  } else if (behaviour != NONE) {
-    // Do behaviour
+  } else {
+
   }
 }
 
@@ -152,8 +152,8 @@ bool Entity::canMove(int xx, int yy, LevelData* data) {
   if (m == LevelData::BLOCKED || ((m == LevelData::SURF || m == LevelData::WATERFALL) && (m != movement))) {
     return false;
   }
-  if ((m == LevelData::LEDGE_R && xx != 1) || (m == LevelData::LEDGE_T && yy != -1)
-      || (m == LevelData::LEDGE_L && xx != -1) || (m == LevelData::LEDGE_B && yy != 1)) {
+  if ((m == LevelData::LEDGE_RIGHT && xx != 1) || (m == LevelData::LEDGE_UP && yy != -1)
+      || (m == LevelData::LEDGE_LEFT && xx != -1) || (m == LevelData::LEDGE_DOWN && yy != 1)) {
     return false;
   }
   return (f & on_floor);
