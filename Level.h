@@ -10,22 +10,24 @@
 
 #include <string>
 #include <vector>
-#include <map>
 #include "Entity.h"
 #include "LevelData.h"
-#include "defines.h"
+#include "TileSet.h"
+#include <SFML/Config.hpp>
 #include <SFML/Graphics/RenderTexture.hpp>
-#include <SFML/Graphics/Texture.hpp>
+#include <SFML/Graphics/VertexArray.hpp>
 
 using std::string;
 using std::vector;
-using std::map;
 using sf::RenderTexture;
-using sf::Texture;
+using sf::VertexArray;
 
 class Level {
+  private:
+    void setVertexArrays(unsigned);
+    void renderOutsideTexture(Uint16*, Uint16*);
   public:
-    static Texture debug_texture;
+    static TileSet debug_tiles, tiles;
 
     class Neighbour {
       public:
@@ -36,10 +38,13 @@ class Level {
         short offset;
         Neighbour(unsigned short i = 0, short off = 0) : id(i), offset(off) {}
     };
+    // Rendering stuff
+    RenderTexture texture_debug, texture_back, texture_front, texture_outside;
+    VertexArray va_debug, va_back, va_front;
 
-    RenderTexture texture_back, texture_front;
+    // General level stuff
     bool loaded;
-    unsigned short id;
+    Uint16 id;
     LevelData* data;
     vector<Entity*> entities;
     Neighbour neighbour[4];

@@ -8,7 +8,9 @@
 #ifndef LEVELDATA_H_
 #define LEVELDATA_H_
 
-#include "defines.h"
+#include <SFML/Config.hpp>
+
+using sf::Uint8;
 
 class LevelData {
   public:
@@ -21,10 +23,10 @@ class LevelData {
       SEPERATE = 1, FLOOR1 = 2, FLOOR2 = 4, FLOOR3 = 8, FLOOR4 = 16
     };
     unsigned short width, height;
-    byte** movement;
-    byte** floors;
-    byte** tiles_back;
-    byte** tiles_front;
+    Uint8** movement;
+    Uint8** floors;
+    Uint8** tiles_back;
+    Uint8** tiles_front;
     LevelData(unsigned short, unsigned short);
     ~LevelData();
 };

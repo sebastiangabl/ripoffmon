@@ -17,6 +17,10 @@ unsigned cl(int a, unsigned b) {
   return a;
 }
 
+bool Entity::compare(const Entity* first, const Entity* second) {
+  return (first->y < second->y);
+}
+
 Entity::Entity(unsigned short i, short xx, short yy) {
   id = i;
   prev_x = xx;
@@ -147,8 +151,8 @@ void Entity::move(int xx, int yy) {
 }
 
 bool Entity::canMove(int xx, int yy, LevelData* data) {
-  byte m = data->movement[cl(x + xx, data->width)][cl(y + yy, data->height)];
-  byte f = data->floors[cl(x + xx, data->width)][cl(y + yy, data->height)];
+  Uint8 m = data->movement[cl(x + xx, data->width)][cl(y + yy, data->height)];
+  Uint8 f = data->floors[cl(x + xx, data->width)][cl(y + yy, data->height)];
   if (m == LevelData::BLOCKED || ((m == LevelData::SURF || m == LevelData::WATERFALL) && (m != movement))) {
     return false;
   }

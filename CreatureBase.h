@@ -12,10 +12,12 @@
 #include <vector>
 #include "Stats.h"
 #include "Ability.h"
-#include "defines.h"
+#include <SFML/Config.hpp>
 
 using std::string;
 using std::vector;
+using sf::Uint8;
+using sf::Uint16;
 
 enum Type {
   NONE = -1, NORMAL = 0, FIGHTING, FYLING, POISON, GROUND, ROCK, BUG, GHOST,
@@ -52,9 +54,9 @@ class CreatureBase {
     Stats base_stats, effort_reward;
     float gender_ratio; // 0 = male, 1 = female, >1 = none
     vector<Ability*> abilities, hidden_abilities;
-    byte catch_rate, base_friendship;
+    Uint8 catch_rate, base_friendship;
     EggGroup egg_group[2];
-    unsigned short egg_steps;
+    Uint16 egg_steps;
 
     CreatureBase();
 };

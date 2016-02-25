@@ -8,6 +8,7 @@
 #include "File.h"
 
 File::File() {
+  size = 0;
 }
 
 File::~File() {
@@ -16,6 +17,11 @@ File::~File() {
 
 bool File::open(const char* fname, std::_Ios_Openmode flags) {
   file.open(fname, flags);
+  if (isOpen()) {
+    file.seekg(0, file.end);
+    size = file.tellg();
+    file.seekg(0, file.beg);
+  }
   return isOpen();
 }
 
@@ -30,13 +36,14 @@ void File::close() {
 unsigned File::write(string data) {
   const char* str = data.c_str();
   file.write(str, data.size() + 1);
+  size += data.size() + 1;
   return (data.size() + 1);
 }
 
 string File::read() {
   string data;
   char c;
-  while (!file.eof()) {
+  while (!eof()) {
     file.read(&c, sizeof(char));
     if (c == '\0') {
       break;
@@ -45,4 +52,8 @@ string File::read() {
     }
   }
   return data;
+}
+
+bool File::eof() {
+  return (file.tellg() >= size || file.eof());
 }

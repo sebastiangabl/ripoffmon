@@ -11,7 +11,7 @@
 
 using namespace std;
 
-map<unsigned, Level*> LevelManager::id_map;
+map<Uint16, Level*> LevelManager::id_map;
 unsigned LevelManager::current_level = 1;
 
 void LevelManager::loadLevel(Level* l) {
@@ -20,7 +20,7 @@ void LevelManager::loadLevel(Level* l) {
   }
 }
 
-Level* LevelManager::getLevel(unsigned id, bool async) {
+Level* LevelManager::getLevel(Uint16 id, bool async) {
   if (!id) {
     return 0;
   }
@@ -35,13 +35,13 @@ Level* LevelManager::getCurrentLevel() {
   return getLevel(current_level);
 }
 
-Level* LevelManager::changeLevel(unsigned id) {
+Level* LevelManager::changeLevel(Uint16 id) {
   current_level = id;
   return getLevel(current_level);
 }
 
 void LevelManager::free() {
-  for (map<unsigned, Level*>::iterator it = id_map.begin(); it != id_map.end(); it++) {
+  for (map<Uint16, Level*>::iterator it = id_map.begin(); it != id_map.end(); it++) {
     delete it->second;
   }
   id_map.clear();

@@ -10,15 +10,15 @@
 LevelData::LevelData(unsigned short w, unsigned short h) {
   width = w;
   height = h;
-  movement = new byte*[width];
-  floors = new byte*[width];
-  tiles_back = new byte*[width];
-  tiles_front = new byte*[width];
+  movement = new Uint8*[width];
+  floors = new Uint8*[width];
+  tiles_back = new Uint8*[width];
+  tiles_front = new Uint8*[width];
   for (unsigned i = 0; i < width; i++) {
-    movement[i] = new byte[height];
-    floors[i] = new byte[height];
-    tiles_back[i] = new byte[height];
-    tiles_front[i] = new byte[height];
+    movement[i] = new Uint8[height];
+    floors[i] = new Uint8[height];
+    tiles_back[i] = new Uint8[height];
+    tiles_front[i] = new Uint8[height];
   }
 }
 

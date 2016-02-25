@@ -17,6 +17,7 @@ using std::string;
 class File {
   private:
     fstream file;
+    unsigned size;
   public:
     File();
     ~File();
@@ -31,11 +32,14 @@ class File {
     template <class T>
     T read();
     string read();
+
+    bool eof();
 };
 
 template<class T>
 inline unsigned File::write(T data) {
   file.write((const char*)&data, sizeof(T));
+  size += sizeof(T);
   return sizeof(T);
 }
 

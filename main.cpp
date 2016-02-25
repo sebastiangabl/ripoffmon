@@ -15,6 +15,9 @@ using namespace std;
 using namespace sf;
 
 int main() {
+  Level::debug_tiles.loadFromFile("tilesets/debug.png");
+  Level::tiles.loadFromFile("tilesets/tiles.png");
+
   Level* level = LevelManager::getLevel(1);
 
   Player p(level->data->width / 2, level->data->height / 2);
@@ -27,8 +30,6 @@ int main() {
   win.setFramerateLimit(0);
   win.setVerticalSyncEnabled(true);
   Scene scene(640, 360);
-
-  Level::debug_texture.loadFromFile("tilesets/debug.png");
 
   while (win.isOpen()) {
     Event e;
@@ -66,7 +67,7 @@ int main() {
       level = nlev;
     }
 
-    scene.render(LevelManager::getCurrentLevel(), &p);
+    scene.render(LevelManager::getCurrentLevel(), &p, Keyboard::isKeyPressed(Keyboard::Space));
     win.draw(scene);
     win.display();
   }

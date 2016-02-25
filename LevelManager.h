@@ -10,18 +10,20 @@
 
 #include <map>
 #include "Level.h"
+#include <SFML/Config.hpp>
 
 using std::map;
+using sf::Uint16;
 
 class LevelManager {
   private:
-    static map<unsigned, Level*> id_map;
+    static map<Uint16, Level*> id_map;
     static unsigned current_level;
     static void loadLevel(Level*);
   public:
-    static Level* getLevel(unsigned, bool = false);
+    static Level* getLevel(Uint16, bool = false);
     static Level* getCurrentLevel();
-    static Level* changeLevel(unsigned);
+    static Level* changeLevel(Uint16);
 
     static void free();
 };

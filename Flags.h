@@ -9,7 +9,6 @@
 #define FLAGS_H_
 
 #include <map>
-#include "defines.h"
 
 using std::map;
 
