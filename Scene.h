@@ -12,11 +12,13 @@
 #include <SFML/Graphics/RenderTexture.hpp>
 #include <SFML/Graphics/Sprite.hpp>
 #include <SFML/Graphics/View.hpp>
+#include <SFML/Graphics/Shader.hpp>
 #include "LevelManager.h"
 
 using sf::RenderTexture;
 using sf::Sprite;
 using sf::View;
+using sf::Shader;
 using sf::Vector2u;
 
 class Scene: public sf::Drawable {

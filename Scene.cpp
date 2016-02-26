@@ -84,6 +84,30 @@ void Scene::render(Level* l, Entity* e, bool debug) {
   }
 
   texture.draw(*e);
+  if ((l->tiles.getTileFlags(l->data->tiles_front[e->x][e->y]) & TileSet::FOREGROUND)
+      || (e->on_floor << 1) < l->data->floors[e->x][e->y]) {
+    Sprite front(l->texture_front.getTexture(), IntRect(e->x * 24, e->y * 24, 24, 24));
+    front.setPosition(e->x * 24, e->y * 24);
+    texture.draw(front);
+  }
+  if (e->y - 1 >= 0 && (e->on_floor << 1) < l->data->floors[e->x][e->y - 1]) {
+    Sprite front(l->texture_front.getTexture(), IntRect(e->x * 24, (e->y - 1) * 24, 24, 24));
+    front.setPosition(e->x * 24, (e->y - 1) * 24);
+    texture.draw(front);
+  }
+  if (e->prev_x >= 0 && e->prev_x < l->data->width && e->prev_y >= 0 && e->prev_y < l->data->height
+      && ((l->tiles.getTileFlags(l->data->tiles_front[e->prev_x][e->prev_y]) & TileSet::FOREGROUND)
+          || (e->on_floor << 1) < l->data->floors[e->prev_x][e->prev_y])) {
+    Sprite front(l->texture_front.getTexture(), IntRect(e->prev_x * 24, e->prev_y * 24, 24, 24));
+    front.setPosition(e->prev_x * 24, e->prev_y * 24);
+    texture.draw(front);
+  }
+  if (e->prev_x >= 0 && e->prev_x < l->data->width && e->prev_y - 1 >= 0 && e->prev_y - 1 < l->data->height
+      && (e->on_floor << 1) < l->data->floors[e->prev_x][e->prev_y - 1]) {
+    Sprite front(l->texture_front.getTexture(), IntRect(e->prev_x * 24, (e->prev_y - 1) * 24, 24, 24));
+    front.setPosition(e->prev_x * 24, (e->prev_y - 1) * 24);
+    texture.draw(front);
+  }
 
   texture.display();
 }

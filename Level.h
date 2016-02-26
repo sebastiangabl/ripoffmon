@@ -13,12 +13,14 @@
 #include "Entity.h"
 #include "LevelData.h"
 #include "TileSet.h"
+#include <SFML/System/Clock.hpp>
 #include <SFML/Config.hpp>
 #include <SFML/Graphics/RenderTexture.hpp>
 #include <SFML/Graphics/VertexArray.hpp>
 
 using std::string;
 using std::vector;
+using sf::Clock;
 using sf::RenderTexture;
 using sf::VertexArray;
 
@@ -34,11 +36,13 @@ class Level {
         enum Direction {
           RIGHT = 0, TOP, LEFT, BOTTOM
         };
-        unsigned short id;
+        Uint16 id;
         short offset;
         Neighbour(unsigned short i = 0, short off = 0) : id(i), offset(off) {}
     };
     // Rendering stuff
+    Clock animation_clock;
+    vector<unsigned> animated_back, animated_front;
     RenderTexture texture_debug, texture_back, texture_front, texture_outside;
     VertexArray va_debug, va_back, va_front;
 
