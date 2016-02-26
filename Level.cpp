@@ -76,13 +76,13 @@ void Level::renderOutsideTexture(Uint16* back, Uint16* front) {
     va_back[i * 4 + 2].position = va_front[i * 4 + 2].position = Vector2f(x + 1, y + 1) * 24.f;
     va_back[i * 4 + 3].position = va_front[i * 4 + 3].position = Vector2f(x + 1, y) * 24.f;
 
-    Vector2u tile = debug_tiles.getTileCoords(back[i]);
+    Vector2u tile = tiles.getTileCoords(back[i]);
     va_back[i * 4 + 0].texCoords = Vector2f(tile.x, tile.y);
     va_back[i * 4 + 1].texCoords = Vector2f(tile.x, tile.y + tiles.tile_size);
     va_back[i * 4 + 2].texCoords = Vector2f(tile.x + tiles.tile_size, tile.y + tiles.tile_size);
     va_back[i * 4 + 3].texCoords = Vector2f(tile.x + tiles.tile_size, tile.y);
 
-    tile = debug_tiles.getTileCoords(front[i]);
+    tile = tiles.getTileCoords(front[i]);
     va_front[i * 4 + 0].texCoords = Vector2f(tile.x, tile.y);
     va_front[i * 4 + 1].texCoords = Vector2f(tile.x, tile.y + tiles.tile_size);
     va_front[i * 4 + 2].texCoords = Vector2f(tile.x + tiles.tile_size, tile.y + tiles.tile_size);
@@ -175,7 +175,7 @@ void Level::render() {
     unsigned t = animated_back[i];
     unsigned x = t % data->width;
     unsigned y = t / data->width;
-    unsigned time = unsigned(animation_clock.getElapsedTime().asSeconds() * 2) % 8;
+    unsigned time = unsigned(animation_clock.getElapsedTime().asSeconds() * 4) % 8;
     Vector2u tile = tiles.getTileCoords(data->tiles_back[x][y] + time);
     va_back[t * 4 + 0].texCoords = Vector2f(tile.x, tile.y);
     va_back[t * 4 + 1].texCoords = Vector2f(tile.x, tile.y + tiles.tile_size);
@@ -190,7 +190,7 @@ void Level::render() {
     unsigned t = animated_front[i];
     unsigned x = t % data->width;
     unsigned y = t / data->width;
-    unsigned time = (unsigned) (animation_clock.getElapsedTime().asSeconds() * 2) % 4;
+    unsigned time = (unsigned) (animation_clock.getElapsedTime().asSeconds() * 4) % 8;
     Vector2u tile = tiles.getTileCoords(data->tiles_front[x][y] + time);
     va_front[t * 4 + 0].texCoords = Vector2f(tile.x, tile.y);
     va_front[t * 4 + 1].texCoords = Vector2f(tile.x, tile.y + tiles.tile_size);
