@@ -19,7 +19,6 @@ class LevelManager {
   private:
     static map<Uint16, Level*> id_map;
     static unsigned current_level;
-    static void loadLevel(Level*);
   public:
     static Level* getLevel(Uint16, bool = false);
     static Level* getCurrentLevel();

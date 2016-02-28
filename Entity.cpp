@@ -21,8 +21,7 @@ bool Entity::compare(const Entity* first, const Entity* second) {
   return (first->y < second->y);
 }
 
-Entity::Entity(unsigned short i, short xx, short yy) {
-  id = i;
+Entity::Entity(short xx, short yy, Uint16 spriteid) {
   prev_x = xx;
   prev_y = yy;
   x = xx;
@@ -33,7 +32,7 @@ Entity::Entity(unsigned short i, short xx, short yy) {
   on_floor = LevelData::FLOOR1;
   movement = LevelData::FLOOR;
   blocking = true;
-  visible = true;
+  visible = spriteid != 0;
   warp = 0;
   flag = 0;
 }
@@ -123,9 +122,6 @@ void Entity::update(float delta, LevelData* data) {
 }
 
 void Entity::updateFloor(LevelData* data) {
-  if (Flags::get(flag)) {
-    return;
-  }
   if (x < 0 || unsigned(x) >= data->width || y < 0 || unsigned(y) >= data->height) {
     return;
   } else {
@@ -164,4 +160,7 @@ bool Entity::canMove(int xx, int yy, LevelData* data) {
 }
 
 void Entity::draw(sf::RenderTarget& rt, sf::RenderStates rs) const {
+  if (!visible) {
+    return;
+  }
 }

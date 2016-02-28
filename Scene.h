@@ -8,23 +8,24 @@
 #ifndef SCENE_H_
 #define SCENE_H_
 
+#include <vector>
 #include <SFML/Graphics/Drawable.hpp>
 #include <SFML/Graphics/RenderTexture.hpp>
 #include <SFML/Graphics/Sprite.hpp>
 #include <SFML/Graphics/View.hpp>
-#include <SFML/Graphics/Shader.hpp>
 #include "LevelManager.h"
 
+using std::vector;
 using sf::RenderTexture;
 using sf::Sprite;
 using sf::View;
-using sf::Shader;
 using sf::Vector2u;
 
 class Scene: public sf::Drawable {
   private:
     RenderTexture texture;
     View view;
+    void drawEntities(vector<Entity*>, Level*);
   public:
     Scene(unsigned, unsigned);
     ~Scene();

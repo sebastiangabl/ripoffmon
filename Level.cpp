@@ -8,7 +8,6 @@
 #include "Level.h"
 #include "utils/File.h"
 #include <iostream>
-#include <algorithm>
 
 using namespace std;
 using namespace sf;
@@ -26,17 +25,7 @@ void Level::setVertexArrays(unsigned i) {
   va_debug[i * 4 + 3].position = va_back[i * 4 + 3].position = va_front[i * 4 + 3].position = Vector2f(x + 1, y) * 24.f;
 
   // Debug
-  Uint8 m = data->movement[x][y];
-  Uint8 f = data->floors[x][y] & ~LevelData::SEPERATE;
-  bool merged = (f & (f - 1));
-  Uint8 f2 = log2(f);
-
-  va_debug[i * 4 + 0].color = va_debug[i * 4 + 0].color = va_debug[i * 4 + 1].color = va_debug[i * 4 + 2].color =
-      va_debug[i * 4 + 3].color =
-          m != LevelData::BLOCKED ?
-              (merged ? Color::White : Color(100 + f2 * 20, 100 + f2 * 20, 100 + f2 * 20)) : Color::White;
-
-  Vector2u tile = debug_tiles.getTileCoords(m);
+  Vector2u tile = debug_tiles.getTileCoords(data->movement[x][y]);
   va_debug[i * 4 + 0].texCoords = Vector2f(tile.x, tile.y);
   va_debug[i * 4 + 1].texCoords = Vector2f(tile.x, tile.y + debug_tiles.tile_size);
   va_debug[i * 4 + 2].texCoords = Vector2f(tile.x + debug_tiles.tile_size, tile.y + debug_tiles.tile_size);
@@ -157,7 +146,6 @@ bool Level::load(const char* fname) {
   f.close();
   loaded = true;
 
-  sort(entities.begin(), entities.end(), Entity::compare);
   renderOutsideTexture(o_back, o_front);
 
   return true;

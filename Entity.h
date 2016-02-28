@@ -25,10 +25,6 @@ class Entity: public sf::Drawable {
   public:
     static bool compare(const Entity*, const Entity*);
 
-    enum Type {
-      ITEM, NPC, WARP
-    };
-
     enum Direction {
       RIGHT, UP, LEFT, DOWN
     };
@@ -46,7 +42,6 @@ class Entity: public sf::Drawable {
       NONE, LOOK_RANDOM
     };
 
-    Uint16 id;
     short prev_x, prev_y, x, y;
     queue<ActionPair> action_queue;
     float action_step;
@@ -58,7 +53,7 @@ class Entity: public sf::Drawable {
     bool visible;
     Uint16 warp, flag;
 
-    Entity(Uint16, short = 0, short = 0);
+    Entity(short = 0, short = 0, Uint16 = 0);
     virtual ~Entity();
     void update(float, LevelData*);
     void updateFloor(LevelData*);

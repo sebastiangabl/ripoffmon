@@ -13,7 +13,7 @@ using namespace std;
 using namespace sf;
 
 Player::Player(int xx, int yy) :
-    Entity(1, xx, yy) {
+    Entity(xx, yy, 1) {
 
 }
 

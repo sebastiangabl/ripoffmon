@@ -14,19 +14,15 @@ using namespace std;
 map<Uint16, Level*> LevelManager::id_map;
 unsigned LevelManager::current_level = 1;
 
-void LevelManager::loadLevel(Level* l) {
-  if (!l->load(string("leveldata/" + typeToString(l->id) + ".dat").c_str())) {
-    cerr << "ERROR: Level " << l->id << " could not be loaded!\n";
-  }
-}
-
 Level* LevelManager::getLevel(Uint16 id, bool async) {
   if (!id) {
     return 0;
   }
   if (id_map.find(id) == id_map.end()) {
     id_map[id] = new Level(id);
-    loadLevel(id_map[id]);
+    if (!id_map[id]->load(string("leveldata/" + typeToString(id) + ".dat").c_str())) {
+      cerr << "ERROR: Level " << id << " could not be loaded!\n";
+    }
   }
   return id_map[id];
 }
