@@ -8,6 +8,7 @@
 #include "LevelManager.h"
 #include "Player.h"
 #include "Scene.h"
+#include "MusicLoop.h"
 #include <SFML/Graphics.hpp>
 #include <iostream>
 
@@ -30,6 +31,10 @@ int main() {
   win.setFramerateLimit(0);
   win.setVerticalSyncEnabled(true);
   Scene scene(640, 360);
+
+  MusicLoop test;
+  test.openFromFile("music/1.ogg", 667, 67333);
+  test.play();
 
   while (win.isOpen()) {
     Event e;
