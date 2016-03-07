@@ -32,8 +32,7 @@ int main() {
   win.setVerticalSyncEnabled(true);
   Scene scene(640, 360);
 
-  MusicLoop test;
-  test.openFromFile("music/1.ogg", 667, 67333);
+  MusicLoop test("music/1.ogg", milliseconds(667), milliseconds(67333));
   test.play();
 
   while (win.isOpen()) {
@@ -77,6 +76,7 @@ int main() {
     win.display();
   }
   LevelManager::free();
+  cout << "Byebye!\n";
   return 0;
 }
 

@@ -8,28 +8,35 @@
 #ifndef MUSICLOOP_H_
 #define MUSICLOOP_H_
 
-#include <thread>
-#include <SFML/Config.hpp>
-#include <SFML/Audio/Music.hpp>
+#include <SFML/Audio.hpp>
 
-using std::thread;
-using sf::Uint8;
-using sf::Music;
+using sf::InputSoundFile;
+using sf::Time;
+using sf::Mutex;
+using sf::Uint64;
+using std::vector;
 
-class MusicLoop {
+class MusicLoop: public sf::SoundStream {
   private:
-    Music music[2];
-    unsigned start_point, end_point;
-    bool playing, second_pos;
-    thread loop_thread;
-  public:
-    MusicLoop();
-    ~MusicLoop();
-    bool openFromFile(const char*, unsigned = 0, unsigned = 0);
-    void play();
-    void stop();
-    float getVolume();
-    void setVolume(float);
-};
+    InputSoundFile m_file;        ///< The streamed music file
+    Time m_duration;    ///< Music duration
+    vector<sf::Int16> m_samples;     ///< Temporary buffer of samples
+    Mutex m_mutex;       ///< Mutex protecting the data
+    Uint64 m_loopBegin;   ///< First sample position
+    Uint64 m_loopEnd;     ///< Last sample position
+    Uint64 m_loopCurrent; ///< Current sample position
 
+  protected:
+    virtual bool onGetData(Chunk&);
+    virtual void onSeek(Time);
+
+  public:
+    MusicLoop(const char*, Time = sf::milliseconds(0), Time = sf::milliseconds(0));
+    ~MusicLoop();
+
+    sf::Time getLoopBegin();
+    sf::Time getLoopEnd();
+
+    void setLoopPoints(Time, Time);
+};
 #endif /* MUSICLOOP_H_ */
