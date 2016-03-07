@@ -8,15 +8,15 @@
 #ifndef LEVEL_H_
 #define LEVEL_H_
 
-#include <string>
-#include <vector>
-#include "Entity.h"
-#include "LevelData.h"
-#include "TileSet.h"
-#include <SFML/System/Clock.hpp>
 #include <SFML/Config.hpp>
 #include <SFML/Graphics/RenderTexture.hpp>
 #include <SFML/Graphics/VertexArray.hpp>
+#include <SFML/System/Clock.hpp>
+#include <vector>
+
+#include "Entity.h"
+#include "LevelData.h"
+#include "TileSet.h"
 
 using std::string;
 using std::vector;

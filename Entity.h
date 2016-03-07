@@ -8,11 +8,13 @@
 #ifndef ENTITY_H_
 #define ENTITY_H_
 
-#include <queue>
-#include <utility>
-#include "LevelData.h"
 #include <SFML/Config.hpp>
 #include <SFML/Graphics/Drawable.hpp>
+#include <SFML/Graphics/RenderStates.hpp>
+#include <queue>
+#include <utility>
+
+class LevelData;
 
 using std::queue;
 using std::pair;

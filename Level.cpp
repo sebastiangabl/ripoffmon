@@ -6,8 +6,18 @@
  */
 
 #include "Level.h"
-#include "utils/File.h"
+
+#include <SFML/Graphics/Color.hpp>
+#include <SFML/Graphics/PrimitiveType.hpp>
+#include <SFML/Graphics/Texture.hpp>
+#include <SFML/Graphics/Vertex.hpp>
+#include <SFML/System/Time.hpp>
+#include <SFML/System/Vector2.hpp>
 #include <iostream>
+
+#include "LevelData.h"
+#include "TileSet.h"
+#include "utils/File.h"
 
 using namespace std;
 using namespace sf;

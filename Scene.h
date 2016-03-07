@@ -8,16 +8,17 @@
 #ifndef SCENE_H_
 #define SCENE_H_
 
-#include <vector>
-#include <SFML/Graphics/Drawable.hpp>
+#include <SFML/Graphics/RenderStates.hpp>
 #include <SFML/Graphics/RenderTexture.hpp>
-#include <SFML/Graphics/Sprite.hpp>
 #include <SFML/Graphics/View.hpp>
-#include "LevelManager.h"
+#include <vector>
+
+#include "Entity.h"
+
+class Level;
 
 using std::vector;
 using sf::RenderTexture;
-using sf::Sprite;
 using sf::View;
 using sf::Vector2u;
 

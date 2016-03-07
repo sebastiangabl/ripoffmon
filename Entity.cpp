@@ -6,7 +6,9 @@
  */
 
 #include "Entity.h"
+
 #include "Flags.h"
+#include "LevelData.h"
 
 unsigned cl(int a, unsigned b) {
   if (a < 0) {

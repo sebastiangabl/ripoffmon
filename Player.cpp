@@ -6,8 +6,18 @@
  */
 
 #include "Player.h"
-#include <iostream>
-#include "SFML/Graphics.hpp"
+
+#include <SFML/Graphics/CircleShape.hpp>
+#include <SFML/Graphics/Color.hpp>
+#include <SFML/Graphics/RectangleShape.hpp>
+#include <SFML/Graphics/RenderStates.hpp>
+#include <SFML/Graphics/RenderTarget.hpp>
+#include <SFML/System/Vector2.hpp>
+#include <cmath>
+#include <queue>
+#include <utility>
+
+#include "LevelData.h"
 
 using namespace std;
 using namespace sf;

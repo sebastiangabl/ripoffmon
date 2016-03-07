@@ -5,13 +5,22 @@
  *      Author: Sebastian
  */
 
+#include <SFML/Graphics/RenderWindow.hpp>
+#include <SFML/System/Clock.hpp>
+#include <SFML/System/Time.hpp>
+#include <SFML/Window/Event.hpp>
+#include <SFML/Window/Keyboard.hpp>
+#include <SFML/Window/VideoMode.hpp>
+#include <SFML/Window/WindowStyle.hpp>
+#include <iostream>
+
+#include "Level.h"
+#include "LevelData.h"
 #include "LevelManager.h"
+#include "MusicLoop.h"
 #include "Player.h"
 #include "Scene.h"
-#include "MusicLoop.h"
-#include <SFML/Graphics.hpp>
-#include <iostream>
-#include "utils/File.h"
+#include "TileSet.h"
 
 using namespace std;
 using namespace sf;
@@ -33,7 +42,7 @@ int main() {
   win.setVerticalSyncEnabled(true);
   Scene scene(640, 360);
 
-  MusicLoop test("music/2.ogg");
+  MusicLoop test("music/1.ogg");
   test.play();
 
   while (win.isOpen()) {

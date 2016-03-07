@@ -6,9 +6,11 @@
  */
 
 #include "TileSet.h"
-#include "utils/File.h"
+
+#include <SFML/System/Vector2.hpp>
 #include <string>
-#include <iostream>
+
+#include "utils/File.h"
 
 using namespace std;
 using namespace sf;

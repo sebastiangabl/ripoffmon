@@ -8,10 +8,9 @@
 #ifndef TILESET_H_
 #define TILESET_H_
 
-#include <map>
-#include <SFML/Graphics/Texture.hpp>
-#include <SFML/System/Vector2.hpp>
 #include <SFML/Config.hpp>
+#include <SFML/Graphics/Texture.hpp>
+#include <map>
 
 using std::map;
 using sf::Texture;

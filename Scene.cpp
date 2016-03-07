@@ -6,10 +6,20 @@
  */
 
 #include "Scene.h"
-#include <SFML/Graphics.hpp>
-#include <iostream>
+
+#include <SFML/Graphics/BlendMode.hpp>
+#include <SFML/Graphics/Color.hpp>
+#include <SFML/Graphics/Rect.hpp>
+#include <SFML/Graphics/Sprite.hpp>
+#include <SFML/System/Vector2.hpp>
 #include <algorithm>
+#include <cmath>
+
 #include "Flags.h"
+#include "Level.h"
+#include "LevelData.h"
+#include "LevelManager.h"
+#include "TileSet.h"
 
 using namespace std;
 using namespace sf;

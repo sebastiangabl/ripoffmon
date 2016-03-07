@@ -8,9 +8,10 @@
 #ifndef LEVELMANAGER_H_
 #define LEVELMANAGER_H_
 
-#include <map>
-#include "Level.h"
 #include <SFML/Config.hpp>
+#include <map>
+
+#include "Level.h"
 
 using std::map;
 using sf::Uint16;

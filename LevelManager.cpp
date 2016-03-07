@@ -6,8 +6,12 @@
  */
 
 #include "LevelManager.h"
-#include "utils/StringConverter.h"
+
 #include <iostream>
+#include <string>
+#include <utility>
+
+#include "utils/StringConverter.h"
 
 using namespace std;
 
