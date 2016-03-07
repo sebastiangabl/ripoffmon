@@ -6,6 +6,13 @@
  */
 
 #include "MusicLoop.h"
+
+#include <SFML/System/Lock.hpp>
+#include <algorithm>
+#include <cstddef>
+#include <map>
+#include <string>
+
 #include "utils/File.h"
 #include "utils/StringConverter.h"
 

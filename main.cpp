@@ -33,7 +33,7 @@ int main() {
   win.setVerticalSyncEnabled(true);
   Scene scene(640, 360);
 
-  MusicLoop test("music/1.ogg");
+  MusicLoop test("music/2.ogg");
   test.play();
 
   while (win.isOpen()) {

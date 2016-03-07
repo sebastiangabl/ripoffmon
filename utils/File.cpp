@@ -6,7 +6,6 @@
  */
 
 #include "File.h"
-#include <iostream>
 
 using namespace std;
 
@@ -63,12 +62,24 @@ bool File::eof() {
 
 map<string, string> File::readVorbisComments(const char* fname) {
   map<string, string> m;
-  ifstream f;
-  f.open(fname, ifstream::in | ifstream::binary);
+  fstream f;
+  f.open(fname, fstream::in | fstream::binary);
   if (!f.is_open()) {
     return m;
   }
-  f.seekg(109, f.beg);
+
+  f.seekg(26, f.cur);
+  unsigned char segments;
+  f.read((char*)&segments, sizeof(char));
+  unsigned tlen = 0;
+  for (unsigned j = 0; j < (unsigned)segments; j++) {
+    unsigned char len;
+    f.read((char*)&len, sizeof(char));
+    tlen += (unsigned)len;
+  }
+  f.seekg(tlen + 26, f.cur);
+  f.read((char*)&segments, sizeof(char));
+  f.seekg(segments + 7, f.cur);
   unsigned vendor_size;
   f.read((char*)&vendor_size, sizeof(unsigned));
   f.seekg(vendor_size, f.cur);

@@ -9,8 +9,8 @@
 #define FILE_H_
 
 #include <fstream>
-#include <string>
 #include <map>
+#include <string>
 
 using std::fstream;
 using std::string;

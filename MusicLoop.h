@@ -8,7 +8,12 @@
 #ifndef MUSICLOOP_H_
 #define MUSICLOOP_H_
 
-#include <SFML/Audio.hpp>
+#include <SFML/Audio/InputSoundFile.hpp>
+#include <SFML/Audio/SoundStream.hpp>
+#include <SFML/Config.hpp>
+#include <SFML/System/Mutex.hpp>
+#include <SFML/System/Time.hpp>
+#include <vector>
 
 using sf::InputSoundFile;
 using sf::Time;
