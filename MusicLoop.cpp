@@ -6,11 +6,13 @@
  */
 
 #include "MusicLoop.h"
+#include "utils/File.h"
+#include "utils/StringConverter.h"
 
 using namespace std;
 using namespace sf;
 
-MusicLoop::MusicLoop(const char* fname, Time begin, Time end) {
+MusicLoop::MusicLoop(const char* fname) {
   m_file.openFromFile(fname);
   m_loopBegin = 0;
   m_loopEnd = 0;
@@ -23,7 +25,9 @@ MusicLoop::MusicLoop(const char* fname, Time begin, Time end) {
   SoundStream::initialize(m_file.getChannelCount(), m_file.getSampleRate());
 
   setLoop(true);
-  setLoopPoints(begin, end);
+  map<string, string> comments = File::readVorbisComments(fname);
+  setLoopPoints(milliseconds(stringToType<unsigned>(comments["START"])),
+      milliseconds(stringToType<unsigned>(comments["END"])));
 }
 
 MusicLoop::~MusicLoop() {

@@ -10,9 +10,11 @@
 
 #include <fstream>
 #include <string>
+#include <map>
 
 using std::fstream;
 using std::string;
+using std::map;
 
 class File {
   private:
@@ -34,6 +36,8 @@ class File {
     string read();
 
     bool eof();
+
+    static map<string, string> readVorbisComments(const char*);
 };
 
 template<class T>

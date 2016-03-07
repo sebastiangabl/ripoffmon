@@ -11,6 +11,7 @@
 #include "MusicLoop.h"
 #include <SFML/Graphics.hpp>
 #include <iostream>
+#include "utils/File.h"
 
 using namespace std;
 using namespace sf;
@@ -32,7 +33,7 @@ int main() {
   win.setVerticalSyncEnabled(true);
   Scene scene(640, 360);
 
-  MusicLoop test("music/1.ogg", milliseconds(667), milliseconds(67333));
+  MusicLoop test("music/1.ogg");
   test.play();
 
   while (win.isOpen()) {

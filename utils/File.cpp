@@ -6,6 +6,9 @@
  */
 
 #include "File.h"
+#include <iostream>
+
+using namespace std;
 
 File::File() {
   size = 0;
@@ -56,4 +59,31 @@ string File::read() {
 
 bool File::eof() {
   return (file.tellg() >= size || file.eof());
+}
+
+map<string, string> File::readVorbisComments(const char* fname) {
+  map<string, string> m;
+  ifstream f;
+  f.open(fname, ifstream::in | ifstream::binary);
+  if (!f.is_open()) {
+    return m;
+  }
+  f.seekg(109, f.beg);
+  unsigned vendor_size;
+  f.read((char*)&vendor_size, sizeof(unsigned));
+  f.seekg(vendor_size, f.cur);
+  unsigned user_size;
+  f.read((char*)&user_size, sizeof(unsigned));
+  for (unsigned i = 0; i < user_size; i++) {
+    unsigned len;
+    f.read((char*)&len, sizeof(unsigned));
+    string str;
+    char c;
+    for (unsigned j = 0; j < len; j++) {
+      f.read(&c, sizeof(char));
+      str += c;
+    }
+    m[str.substr(0, str.find('='))] = str.substr(str.find('=') + 1);
+  }
+  return m;
 }

@@ -31,7 +31,7 @@ class MusicLoop: public sf::SoundStream {
     virtual void onSeek(Time);
 
   public:
-    MusicLoop(const char*, Time = sf::milliseconds(0), Time = sf::milliseconds(0));
+    MusicLoop(const char*);
     ~MusicLoop();
 
     sf::Time getLoopBegin();
