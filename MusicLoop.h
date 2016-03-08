@@ -43,5 +43,8 @@ class MusicLoop: public sf::SoundStream {
     sf::Time getLoopEnd();
 
     void setLoopPoints(Time, Time);
+
+    void fadeOut(Time);
+    void fadeIn(Time);
 };
 #endif /* MUSICLOOP_H_ */

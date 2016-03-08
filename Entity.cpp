@@ -19,7 +19,7 @@ unsigned cl(int a, unsigned b) {
   return a;
 }
 
-bool Entity::compare(const Entity* first, const Entity* second) {
+bool Entity::compare(Entity* first, Entity* second) {
   return (first->y < second->y);
 }
 
@@ -124,7 +124,7 @@ void Entity::update(float delta, LevelData* data) {
 }
 
 void Entity::updateFloor(LevelData* data) {
-  if (x < 0 || unsigned(x) >= data->width || y < 0 || unsigned(y) >= data->height) {
+  if (!data || x < 0 || unsigned(x) >= data->width || y < 0 || unsigned(y) >= data->height) {
     return;
   } else {
     if (!(data->floors[x][y] & LevelData::SEPERATE)) {
@@ -149,6 +149,9 @@ void Entity::move(int xx, int yy) {
 }
 
 bool Entity::canMove(int xx, int yy, LevelData* data) {
+  if (!data) {
+    return true;
+  }
   Uint8 m = data->movement[cl(x + xx, data->width)][cl(y + yy, data->height)];
   Uint8 f = data->floors[cl(x + xx, data->width)][cl(y + yy, data->height)];
   if (m == LevelData::BLOCKED || ((m == LevelData::SURF || m == LevelData::WATERFALL) && (m != movement))) {

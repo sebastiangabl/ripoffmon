@@ -15,8 +15,6 @@
 #include <SFML/System/Vector2.hpp>
 #include <iostream>
 
-#include "LevelData.h"
-#include "TileSet.h"
 #include "utils/File.h"
 
 using namespace std;
@@ -94,9 +92,8 @@ void Level::renderOutsideTexture(Uint16* back, Uint16* front) {
   texture_outside.setRepeated(true);
 }
 
-Level::Level(unsigned short i) {
+Level::Level() {
   loaded = false;
-  id = i;
   data = 0;
 }
 

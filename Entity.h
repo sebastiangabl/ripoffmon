@@ -25,7 +25,7 @@ typedef pair<int, float> ActionPair;
 
 class Entity: public sf::Drawable {
   public:
-    static bool compare(const Entity*, const Entity*);
+    static bool compare(Entity*, Entity*);
 
     enum Direction {
       RIGHT, UP, LEFT, DOWN

@@ -31,7 +31,7 @@ int main() {
 
   Level* level = LevelManager::getLevel(1);
 
-  Player p(level->data->width / 2, level->data->height / 2);
+  Player p(10, 10);
   p.updateFloor(level->data);
 
   float delta = 0;
@@ -43,7 +43,7 @@ int main() {
   Scene scene(640, 360);
 
   MusicLoop test("music/1.ogg");
-  test.play();
+  test.fadeIn(seconds(1));
 
   while (win.isOpen()) {
     Event e;
@@ -59,29 +59,29 @@ int main() {
         Keyboard::isKeyPressed(Keyboard::LShift));
     p.update(delta, level->data);
 
-    if (p.y < 0 && level->neighbour[Level::Neighbour::TOP].id != 0) {
-      Level* nlev = LevelManager::changeLevel(level->neighbour[Level::Neighbour::TOP].id);
+    if (level->loaded && p.y < 0 && level->neighbour[Level::Neighbour::TOP].id) {
+      Level* nlev = LevelManager::getLevel(level->neighbour[Level::Neighbour::TOP].id);
       p.move(-level->neighbour[Level::Neighbour::TOP].offset, nlev->data->height);
       p.updateFloor(nlev->data);
       level = nlev;
-    } else if (p.y > level->data->height - 1 && level->neighbour[Level::Neighbour::BOTTOM].id != 0) {
-      Level* nlev = LevelManager::changeLevel(level->neighbour[Level::Neighbour::BOTTOM].id);
+    } else if (level->loaded && p.y > level->data->height - 1 && level->neighbour[Level::Neighbour::BOTTOM].id) {
+      Level* nlev = LevelManager::getLevel(level->neighbour[Level::Neighbour::BOTTOM].id);
       p.move(-level->neighbour[Level::Neighbour::BOTTOM].offset, -level->data->height);
       p.updateFloor(nlev->data);
       level = nlev;
-    } else if (p.x < 0 && level->neighbour[Level::Neighbour::LEFT].id != 0) {
-      Level* nlev = LevelManager::changeLevel(level->neighbour[Level::Neighbour::LEFT].id);
+    } else if (level->loaded && p.x < 0 && level->neighbour[Level::Neighbour::LEFT].id) {
+      Level* nlev = LevelManager::getLevel(level->neighbour[Level::Neighbour::LEFT].id);
       p.move(nlev->data->width, -level->neighbour[Level::Neighbour::LEFT].offset);
       p.updateFloor(nlev->data);
       level = nlev;
-    } else if (p.x > level->data->width - 1 && level->neighbour[Level::Neighbour::RIGHT].id != 0) {
-      Level* nlev = LevelManager::changeLevel(level->neighbour[Level::Neighbour::RIGHT].id);
+    } else if (level->loaded && p.x > level->data->width - 1 && level->neighbour[Level::Neighbour::RIGHT].id) {
+      Level* nlev = LevelManager::getLevel(level->neighbour[Level::Neighbour::RIGHT].id);
       p.move(-level->data->width, -level->neighbour[Level::Neighbour::RIGHT].offset);
       p.updateFloor(nlev->data);
       level = nlev;
     }
 
-    scene.render(LevelManager::getCurrentLevel(), &p, Keyboard::isKeyPressed(Keyboard::Space));
+    scene.render(level, &p, Keyboard::isKeyPressed(Keyboard::Space));
     win.draw(scene);
     win.display();
   }

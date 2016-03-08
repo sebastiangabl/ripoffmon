@@ -12,6 +12,7 @@
 #include <SFML/Graphics/RenderTexture.hpp>
 #include <SFML/Graphics/VertexArray.hpp>
 #include <SFML/System/Clock.hpp>
+//#include <set>
 #include <vector>
 
 #include "Entity.h"
@@ -48,12 +49,11 @@ class Level {
 
     // General level stuff
     bool loaded;
-    Uint16 id;
     LevelData* data;
     vector<Entity*> entities;
     Neighbour neighbour[4];
 
-    Level(unsigned short);
+    Level();
     ~Level();
 
     bool load(const char*);

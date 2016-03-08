@@ -7,11 +7,13 @@
 
 #include "MusicLoop.h"
 
+#include <SFML/System/Clock.hpp>
 #include <SFML/System/Lock.hpp>
 #include <algorithm>
 #include <cstddef>
 #include <map>
 #include <string>
+#include <thread>
 
 #include "utils/File.h"
 #include "utils/StringConverter.h"
@@ -33,8 +35,9 @@ MusicLoop::MusicLoop(const char* fname) {
 
   setLoop(true);
   map<string, string> comments = File::readVorbisComments(fname);
-  setLoopPoints(milliseconds(stringToType<unsigned>(comments["START"])),
-      milliseconds(stringToType<unsigned>(comments["END"])));
+  Time t_start = milliseconds(stringToType<unsigned>(comments["START"]));
+  Time t_end = milliseconds(stringToType<unsigned>(comments["END"]));
+  setLoopPoints(t_start, t_end);
 }
 
 MusicLoop::~MusicLoop() {
@@ -144,4 +147,30 @@ void MusicLoop::onSeek(Time timeOffset) {
 
   m_loopCurrent = sampleOffset;
   m_file.seek(sampleOffset);
+}
+
+void MusicLoop::fadeOut(Time time) {
+  thread([=] {
+    float volume = 1;
+    setVolume(volume * 100);
+    Clock c;
+    while (volume > 0) {
+      volume -= c.restart().asSeconds() / time.asSeconds();
+      setVolume(volume * 100);
+    }
+    stop();
+  }).detach();
+}
+
+void MusicLoop::fadeIn(Time time) {
+  thread([=] {
+    float volume = 0;
+    setVolume(volume * 100);
+    play();
+    Clock c;
+    while (volume < 1) {
+      volume += c.restart().asSeconds() / time.asSeconds();
+      setVolume(volume * 100);
+    }
+  }).detach();
 }
