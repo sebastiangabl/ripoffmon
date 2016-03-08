@@ -13,6 +13,7 @@
 #include <SFML/Config.hpp>
 #include <SFML/System/Mutex.hpp>
 #include <SFML/System/Time.hpp>
+#include <thread>
 #include <vector>
 
 using sf::InputSoundFile;
@@ -20,27 +21,32 @@ using sf::Time;
 using sf::Mutex;
 using sf::Uint64;
 using std::vector;
+using std::thread;
 
 class MusicLoop: public sf::SoundStream {
   private:
-    InputSoundFile m_file;        ///< The streamed music file
-    Time m_duration;    ///< Music duration
-    vector<sf::Int16> m_samples;     ///< Temporary buffer of samples
-    Mutex m_mutex;       ///< Mutex protecting the data
-    Uint64 m_loopBegin;   ///< First sample position
-    Uint64 m_loopEnd;     ///< Last sample position
-    Uint64 m_loopCurrent; ///< Current sample position
+    InputSoundFile m_file;
+    Time m_duration;
+    vector<sf::Int16> m_samples;
+    Mutex m_mutex;
+    Uint64 m_loopBegin;
+    Uint64 m_loopEnd;
+    Uint64 m_loopCurrent;
+    thread m_fading_thread;
+    bool m_fading;
+    bool m_valid;
+
+    void stopFading();
 
   protected:
     virtual bool onGetData(Chunk&);
     virtual void onSeek(Time);
 
   public:
-    MusicLoop(const char*);
+    MusicLoop();
     ~MusicLoop();
 
-    sf::Time getLoopBegin();
-    sf::Time getLoopEnd();
+    bool openFromFile(const char*);
 
     void setLoopPoints(Time, Time);
 

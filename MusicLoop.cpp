@@ -13,7 +13,6 @@
 #include <cstddef>
 #include <map>
 #include <string>
-#include <thread>
 
 #include "utils/File.h"
 #include "utils/StringConverter.h"
@@ -21,11 +20,38 @@
 using namespace std;
 using namespace sf;
 
-MusicLoop::MusicLoop(const char* fname) {
-  m_file.openFromFile(fname);
+MusicLoop::MusicLoop() {
   m_loopBegin = 0;
   m_loopEnd = 0;
   m_loopCurrent = 0;
+  m_fading = false;
+  m_valid = false;
+}
+
+MusicLoop::~MusicLoop() {
+  // We must stop before destroying the file
+  stopFading();
+  if (m_valid) {
+    stop();
+  }
+}
+
+void MusicLoop::stopFading() {
+  m_fading = false;
+  if (m_fading_thread.joinable()) {
+    m_fading_thread.join();
+  }
+}
+
+bool MusicLoop::openFromFile(const char* fname) {
+  stopFading();
+  if (m_valid) {
+    stop();
+  }
+  if (!m_file.openFromFile(fname)) {
+    m_valid = false;
+    return false;
+  }
 
   // Resize the internal buffer so that it can contain 1 second of audio samples
   m_samples.resize(m_file.getSampleRate() * m_file.getChannelCount());
@@ -38,31 +64,8 @@ MusicLoop::MusicLoop(const char* fname) {
   Time t_start = milliseconds(stringToType<unsigned>(comments["START"]));
   Time t_end = milliseconds(stringToType<unsigned>(comments["END"]));
   setLoopPoints(t_start, t_end);
-}
-
-MusicLoop::~MusicLoop() {
-  // We must stop before destroying the file
-  stop();
-}
-
-Time MusicLoop::getLoopBegin() {
-  unsigned int sampleRate = getSampleRate();
-  unsigned int channelCount = getChannelCount();
-
-  if (sampleRate && channelCount)
-    return seconds(static_cast<float>(m_loopBegin) / sampleRate / channelCount);
-
-  return Time::Zero;
-}
-
-Time MusicLoop::getLoopEnd() {
-  unsigned int sampleRate = getSampleRate();
-  unsigned int channelCount = getChannelCount();
-
-  if (sampleRate && channelCount)
-    return seconds(static_cast<float>(m_loopEnd) / sampleRate / channelCount);
-
-  return Time::Zero;
+  m_valid = true;
+  return true;
 }
 
 void MusicLoop::setLoopPoints(Time begin, Time end) {
@@ -150,27 +153,35 @@ void MusicLoop::onSeek(Time timeOffset) {
 }
 
 void MusicLoop::fadeOut(Time time) {
-  thread([=] {
+  if (!m_valid) {
+    return;
+  }
+  stopFading();
+  m_fading = true;
+  m_fading_thread = thread([=] {
     float volume = 1;
-    setVolume(volume * 100);
     Clock c;
-    while (volume > 0) {
+    while (m_fading && volume > 0) {
       volume -= c.restart().asSeconds() / time.asSeconds();
-      setVolume(volume * 100);
+      setVolume(max(0.f, volume * 100.f));
     }
     stop();
-  }).detach();
+  });
 }
 
 void MusicLoop::fadeIn(Time time) {
-  thread([=] {
+  if (!m_valid) {
+    return;
+  }
+  stopFading();
+  m_fading = true;
+  m_fading_thread = thread([=] {
     float volume = 0;
-    setVolume(volume * 100);
     play();
     Clock c;
-    while (volume < 1) {
+    while (m_fading && volume < 1) {
       volume += c.restart().asSeconds() / time.asSeconds();
-      setVolume(volume * 100);
+      setVolume(min(100.f, volume * 100));
     }
-  }).detach();
+  });
 }

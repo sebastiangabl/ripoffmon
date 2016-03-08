@@ -95,6 +95,8 @@ void Level::renderOutsideTexture(Uint16* back, Uint16* front) {
 Level::Level() {
   loaded = false;
   data = 0;
+  flags = 0;
+  music = 0;
 }
 
 Level::~Level() {
@@ -104,6 +106,7 @@ Level::~Level() {
 bool Level::load(const char* fname) {
   File f;
   if (!f.open(fname, fstream::in | fstream::binary)) {
+    cerr << "Failed to load level \"" << fname << "\"!\n";
     return false;
   }
   // Set dimensions
@@ -124,6 +127,12 @@ bool Level::load(const char* fname) {
     neighbour[i].id = f.read<Uint16>();
     neighbour[i].offset = f.read<short>();
   }
+
+  // Flags
+  flags = f.read<Uint8>();
+
+  // Music
+  music = f.read<Uint8>();
 
   // Data
   for (unsigned i = 0; i < (unsigned) width * (unsigned) height; i++) {

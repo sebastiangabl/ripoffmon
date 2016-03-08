@@ -15,6 +15,9 @@ NEIGHBOURS        16 bytes
   OFF_LEFT        2 bytes (short)
   ID_DOWN         2 bytes (unsigned short)
   OFF_DOWN        2 bytes (short)
+
+FLAGS             1 byte
+MUSIC             1 byte
   
 LEVEL DATA        6 * WIDTH * HEIGHT bytes
 ------------------------------------------

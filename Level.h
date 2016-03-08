@@ -52,6 +52,8 @@ class Level {
     LevelData* data;
     vector<Entity*> entities;
     Neighbour neighbour[4];
+    Uint8 flags;
+    Uint16 music;
 
     Level();
     ~Level();

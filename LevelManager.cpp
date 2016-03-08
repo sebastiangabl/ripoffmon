@@ -24,9 +24,7 @@ Level* LevelManager::getLevel(Uint16 id, bool async) {
   }
   if (id_map.find(id) == id_map.end()) {
     id_map[id] = new Level();
-    if (!id_map[id]->load(string("leveldata/" + typeToString(id) + ".dat").c_str())) {
-      cerr << "Failed to load level \"" << string("leveldata/" + typeToString(id) + ".dat") << "\"!\n";
-    }
+    id_map[id]->load(string("leveldata/" + typeToString(id) + ".dat").c_str());
   }
   return id_map[id];
 }
