@@ -11,6 +11,7 @@
 #include <SFML/Config.hpp>
 #include <SFML/Graphics/Drawable.hpp>
 #include <SFML/Graphics/RenderStates.hpp>
+#include <SFML/Graphics/RenderTarget.hpp>
 #include <queue>
 #include <utility>
 

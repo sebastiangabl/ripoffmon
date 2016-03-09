@@ -10,6 +10,8 @@
 #include "Flags.h"
 #include "LevelData.h"
 
+using namespace std;
+
 unsigned cl(int a, unsigned b) {
   if (a < 0) {
     return 0;

@@ -11,6 +11,7 @@
 #include <SFML/Config.hpp>
 
 using sf::Uint8;
+using sf::Uint16;
 
 class LevelData {
   public:
@@ -25,8 +26,8 @@ class LevelData {
     unsigned short width, height;
     Uint8** movement;
     Uint8** floors;
-    Uint8** tiles_back;
-    Uint8** tiles_front;
+    Uint16** tiles_back;
+    Uint16** tiles_front;
     LevelData(unsigned short, unsigned short);
     ~LevelData();
 };

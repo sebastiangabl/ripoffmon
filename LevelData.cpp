@@ -12,13 +12,13 @@ LevelData::LevelData(unsigned short w, unsigned short h) {
   height = h;
   movement = new Uint8*[width];
   floors = new Uint8*[width];
-  tiles_back = new Uint8*[width];
-  tiles_front = new Uint8*[width];
+  tiles_back = new Uint16*[width];
+  tiles_front = new Uint16*[width];
   for (unsigned i = 0; i < width; i++) {
     movement[i] = new Uint8[height];
     floors[i] = new Uint8[height];
-    tiles_back[i] = new Uint8[height];
-    tiles_front[i] = new Uint8[height];
+    tiles_back[i] = new Uint16[height];
+    tiles_front[i] = new Uint16[height];
   }
 }
 
