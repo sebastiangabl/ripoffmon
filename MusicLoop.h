@@ -20,6 +20,7 @@ using sf::InputSoundFile;
 using sf::Time;
 using sf::Mutex;
 using sf::Uint64;
+using sf::Uint8;
 using std::vector;
 using std::thread;
 
@@ -50,7 +51,7 @@ class MusicLoop: public sf::SoundStream {
 
     void setLoopPoints(Time, Time);
 
-    void fadeOut(Time);
-    void fadeIn(Time);
+    void fadeOut(Time, bool = false);
+    void fadeIn(Time, float = 100);
 };
 #endif /* MUSICLOOP_H_ */

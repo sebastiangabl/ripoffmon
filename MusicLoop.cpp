@@ -11,6 +11,7 @@
 #include <SFML/System/Lock.hpp>
 #include <algorithm>
 #include <cstddef>
+#include <iostream>
 #include <map>
 #include <string>
 
@@ -152,28 +153,42 @@ void MusicLoop::onSeek(Time timeOffset) {
   m_file.seek(sampleOffset);
 }
 
-void MusicLoop::fadeOut(Time time) {
+void MusicLoop::fadeOut(Time time, bool p) {
   if (!m_valid) {
     return;
   }
   stopFading();
+  if (time == Time::Zero) {
+    stop();
+    return;
+  }
   m_fading = true;
   m_fading_thread = thread([=] {
+    float m = getVolume();
     float volume = 1;
     Clock c;
     while (m_fading && volume > 0) {
       volume -= c.restart().asSeconds() / time.asSeconds();
-      setVolume(max(0.f, volume * 100.f));
+      setVolume(max(0.f, volume * m));
     }
-    stop();
+    if (p) {
+      pause();
+    } else {
+      stop();
+    }
+    setVolume(m);
   });
 }
 
-void MusicLoop::fadeIn(Time time) {
+void MusicLoop::fadeIn(Time time, float m) {
   if (!m_valid) {
     return;
   }
   stopFading();
+  if (time == Time::Zero) {
+    play();
+    return;
+  }
   m_fading = true;
   m_fading_thread = thread([=] {
     float volume = 0;
@@ -181,7 +196,7 @@ void MusicLoop::fadeIn(Time time) {
     Clock c;
     while (m_fading && volume < 1) {
       volume += c.restart().asSeconds() / time.asSeconds();
-      setVolume(min(100.f, volume * 100));
+      setVolume(min(100.f, volume * m));
     }
   });
 }

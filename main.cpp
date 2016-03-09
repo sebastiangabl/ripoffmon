@@ -42,10 +42,12 @@ int main() {
   win.setVerticalSyncEnabled(true);
   Scene scene(640, 360);
 
-  MusicLoop test1, test2;
+  MusicLoop test1, test2, test3;
   test1.openFromFile("music/1.ogg");
   test2.openFromFile("music/2.ogg");
+  test3.openFromFile("music/3.ogg");
   test1.fadeIn(seconds(2));
+  unsigned music_stage = 0;
 
   while (win.isOpen()) {
     Event e;
@@ -57,8 +59,19 @@ int main() {
 
         case Event::KeyPressed:
         if (e.key.code == Keyboard::Return) {
-          test1.fadeOut(seconds(1));
-          test2.fadeIn(seconds(0));
+          if (music_stage == 0) {
+            test1.fadeOut(milliseconds(200), true);
+            test2.play();
+            music_stage = 1;
+          } else if (music_stage == 1) {
+            test2.fadeOut(milliseconds(200));
+            test3.play();
+            music_stage = 2;
+          } else if (music_stage == 2) {
+            test3.fadeOut(milliseconds(800));
+            test1.fadeIn(milliseconds(2400));
+            music_stage = 0;
+          }
         }
         break;
 
