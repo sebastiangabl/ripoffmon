@@ -15,8 +15,9 @@
 using namespace std;
 using namespace sf;
 
+float TileSet::tile_size = 16;
+
 TileSet::TileSet() {
-  tile_size = 24;
   loaded = false;
 }
 

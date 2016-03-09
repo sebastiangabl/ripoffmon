@@ -22,11 +22,11 @@ class TileSet {
   private:
     map<Uint16, Uint8> flags;
   public:
+    static float tile_size;
     enum Flag {
       NONE = 0, ANIMATED = 1, FOREGROUND = 2
     };
     Texture texture;
-    unsigned tile_size;
     bool loaded;
 
     TileSet();

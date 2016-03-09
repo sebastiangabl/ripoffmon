@@ -14,9 +14,6 @@
 #include <SFML/System/Vector2.hpp>
 #include <algorithm>
 #include <cmath>
-#include <map>
-#include <set>
-#include <utility>
 
 #include "Flags.h"
 #include "Level.h"
@@ -44,28 +41,29 @@ void Scene::drawEntities(vector<Entity*> ents, Level* l) {
       continue;
     }
     texture.draw(*e);
-    if ((l->tiles.getTileFlags(l->data->tiles_front[e->x][e->y]) & TileSet::FOREGROUND)
-        || (e->on_floor << 1) < l->data->floors[e->x][e->y]) {
-      Sprite front(l->texture_front.getTexture(), IntRect(e->x * 24, e->y * 24, 24, 24));
-      front.setPosition(e->x * 24, e->y * 24);
+    if ((l->tiles.getTileFlags(l->data->tiles_front[e->x][e->y]) & TileSet::FOREGROUND) || (e->on_floor << 1) < l->data->floors[e->x][e->y]) {
+      Sprite front(l->texture_front.getTexture(), IntRect(e->x * TileSet::tile_size, e->y * TileSet::tile_size, TileSet::tile_size, TileSet::tile_size));
+      front.setPosition(e->x * TileSet::tile_size, e->y * TileSet::tile_size);
       texture.draw(front);
     }
     if (e->y - 1 >= 0 && (e->on_floor << 1) < l->data->floors[e->x][e->y - 1]) {
-      Sprite front(l->texture_front.getTexture(), IntRect(e->x * 24, (e->y - 1) * 24, 24, 24));
-      front.setPosition(e->x * 24, (e->y - 1) * 24);
+      Sprite front(l->texture_front.getTexture(), IntRect(e->x * TileSet::tile_size, (e->y - 1) * TileSet::tile_size, TileSet::tile_size, TileSet::tile_size));
+      front.setPosition(e->x * TileSet::tile_size, (e->y - 1) * TileSet::tile_size);
       texture.draw(front);
     }
     if (e->prev_x >= 0 && e->prev_x < l->data->width && e->prev_y >= 0 && e->prev_y < l->data->height
         && ((l->tiles.getTileFlags(l->data->tiles_front[e->prev_x][e->prev_y]) & TileSet::FOREGROUND)
             || (e->on_floor << 1) < l->data->floors[e->prev_x][e->prev_y])) {
-      Sprite front(l->texture_front.getTexture(), IntRect(e->prev_x * 24, e->prev_y * 24, 24, 24));
-      front.setPosition(e->prev_x * 24, e->prev_y * 24);
+      Sprite front(l->texture_front.getTexture(),
+          IntRect(e->prev_x * TileSet::tile_size, e->prev_y * TileSet::tile_size, TileSet::tile_size, TileSet::tile_size));
+      front.setPosition(e->prev_x * TileSet::tile_size, e->prev_y * TileSet::tile_size);
       texture.draw(front);
     }
     if (e->prev_x >= 0 && e->prev_x < l->data->width && e->prev_y - 1 >= 0 && e->prev_y - 1 < l->data->height
         && (e->on_floor << 1) < l->data->floors[e->prev_x][e->prev_y - 1]) {
-      Sprite front(l->texture_front.getTexture(), IntRect(e->prev_x * 24, (e->prev_y - 1) * 24, 24, 24));
-      front.setPosition(e->prev_x * 24, (e->prev_y - 1) * 24);
+      Sprite front(l->texture_front.getTexture(),
+          IntRect(e->prev_x * TileSet::tile_size, (e->prev_y - 1) * TileSet::tile_size, TileSet::tile_size, TileSet::tile_size));
+      front.setPosition(e->prev_x * TileSet::tile_size, (e->prev_y - 1) * TileSet::tile_size);
       texture.draw(front);
     }
   }
@@ -75,8 +73,8 @@ void Scene::render(Level* l, Entity* e, bool debug) {
   if (!l || !l->loaded) {
     return;
   }
-  view.setCenter((e->prev_x * (1 - e->action_step) + e->x * e->action_step) * 24,
-      (e->prev_y * (1 - e->action_step) + e->y * e->action_step) * 24);
+  view.setCenter((e->prev_x * (1 - e->action_step) + e->x * e->action_step) * TileSet::tile_size,
+      (e->prev_y * (1 - e->action_step) + e->y * e->action_step) * TileSet::tile_size);
   texture.setView(view);
 
   texture.clear(Color::Black);
@@ -84,44 +82,42 @@ void Scene::render(Level* l, Entity* e, bool debug) {
   /* Draw main level outside texture */
   Vector2u size = texture.getSize();
   Vector2f c = view.getCenter();
-  Sprite out(l->texture_outside.getTexture(), IntRect(0, 0, size.x + 48, size.y + 48));
-  out.setPosition(Vector2f(floor((c.x - size.x / 2) / 48) * 48, floor((c.y - size.y / 2) / 48) * 48));
+  Sprite out(l->texture_outside.getTexture(), IntRect(0, 0, size.x + TileSet::tile_size * 2, size.y + TileSet::tile_size * 2));
+  out.setPosition(
+      Vector2f(floor((c.x - size.x / 2) / (TileSet::tile_size * 2)) * (TileSet::tile_size * 2),
+          floor((c.y - size.y / 2) / (TileSet::tile_size * 2)) * (TileSet::tile_size * 2)));
   texture.draw(out);
 
   // Render neighbours
   Level* n[] = { 0, 0, 0, 0 };
   Sprite s;
-  if (l->neighbour[Level::Neighbour::RIGHT].id
-      && (n[0] = LevelManager::getLevel(l->neighbour[Level::Neighbour::RIGHT].id, true)) && n[0]->loaded) {
+  if (l->neighbour[Level::Neighbour::RIGHT].id && (n[0] = LevelManager::getLevel(l->neighbour[Level::Neighbour::RIGHT].id, true)) && n[0]->loaded) {
     n[0]->render();
-    s.setPosition(l->data->width * 24, l->neighbour[Level::Neighbour::RIGHT].offset * 24);
+    s.setPosition(l->data->width * TileSet::tile_size, l->neighbour[Level::Neighbour::RIGHT].offset * TileSet::tile_size);
     s.setTexture(n[0]->texture_back.getTexture(), true);
     texture.draw(s);
     s.setTexture(n[0]->texture_front.getTexture(), true);
     texture.draw(s);
   }
-  if (l->neighbour[Level::Neighbour::TOP].id
-      && (n[1] = LevelManager::getLevel(l->neighbour[Level::Neighbour::TOP].id, true)) && n[1]->loaded) {
+  if (l->neighbour[Level::Neighbour::TOP].id && (n[1] = LevelManager::getLevel(l->neighbour[Level::Neighbour::TOP].id, true)) && n[1]->loaded) {
     n[1]->render();
-    s.setPosition(l->neighbour[Level::Neighbour::TOP].offset * 24, -n[1]->data->height * 24);
+    s.setPosition(l->neighbour[Level::Neighbour::TOP].offset * TileSet::tile_size, -n[1]->data->height * TileSet::tile_size);
     s.setTexture(n[1]->texture_back.getTexture(), true);
     texture.draw(s);
     s.setTexture(n[1]->texture_front.getTexture(), true);
     texture.draw(s);
   }
-  if (l->neighbour[Level::Neighbour::LEFT].id
-      && (n[2] = LevelManager::getLevel(l->neighbour[Level::Neighbour::LEFT].id, true)) && n[2]->loaded) {
+  if (l->neighbour[Level::Neighbour::LEFT].id && (n[2] = LevelManager::getLevel(l->neighbour[Level::Neighbour::LEFT].id, true)) && n[2]->loaded) {
     n[2]->render();
-    s.setPosition(-n[2]->data->width * 24, l->neighbour[Level::Neighbour::LEFT].offset * 24);
+    s.setPosition(-n[2]->data->width * TileSet::tile_size, l->neighbour[Level::Neighbour::LEFT].offset * TileSet::tile_size);
     s.setTexture(n[2]->texture_back.getTexture(), true);
     texture.draw(s);
     s.setTexture(n[2]->texture_front.getTexture(), true);
     texture.draw(s);
   }
-  if (l->neighbour[Level::Neighbour::BOTTOM].id
-      && (n[3] = LevelManager::getLevel(l->neighbour[Level::Neighbour::BOTTOM].id, true)) && n[3]->loaded) {
+  if (l->neighbour[Level::Neighbour::BOTTOM].id && (n[3] = LevelManager::getLevel(l->neighbour[Level::Neighbour::BOTTOM].id, true)) && n[3]->loaded) {
     n[3]->render();
-    s.setPosition(l->neighbour[Level::Neighbour::BOTTOM].offset * 24, l->data->height * 24);
+    s.setPosition(l->neighbour[Level::Neighbour::BOTTOM].offset * TileSet::tile_size, l->data->height * TileSet::tile_size);
     s.setTexture(n[3]->texture_back.getTexture(), true);
     texture.draw(s);
     s.setTexture(n[3]->texture_front.getTexture(), true);

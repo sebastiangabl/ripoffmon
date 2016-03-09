@@ -40,7 +40,7 @@ int main() {
   RenderWindow win(VideoMode(1280, 720), "Ripoffmon", Style::Titlebar | Style::Close);
   win.setFramerateLimit(0);
   win.setVerticalSyncEnabled(true);
-  Scene scene(640, 360);
+  Scene scene(1280 / 4, 720 / 4);
 
   MusicLoop test1, test2, test3;
   test1.openFromFile("music/1.ogg");
