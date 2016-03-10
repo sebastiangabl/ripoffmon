@@ -35,9 +35,7 @@ Entity::Entity(short xx, short yy, Uint16 spriteid) {
   behaviour = NONE;
   on_floor = LevelData::FLOOR1;
   movement = LevelData::FLOOR;
-  blocking = true;
   visible = spriteid != 0;
-  warp = 0;
   flag = 0;
 }
 
@@ -121,8 +119,11 @@ void Entity::update(float delta, LevelData* data) {
       prev_y = y;
     }
   } else {
-
+    performActions(data);
   }
+}
+
+void Entity::performActions(LevelData* data) {
 }
 
 void Entity::updateFloor(LevelData* data) {

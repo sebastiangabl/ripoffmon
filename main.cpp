@@ -37,7 +37,7 @@ int main() {
   float delta = 0;
   Clock delta_clock;
 
-  RenderWindow win(VideoMode(1280, 720), "Ripoffmon", Style::Titlebar | Style::Close);
+  RenderWindow win(VideoMode(1280, 720), "Ripoffmon", Style::Titlebar | Style::Close | Style::Resize);
   win.setFramerateLimit(0);
   win.setVerticalSyncEnabled(true);
   Scene scene(1280 / 4, 720 / 4);
@@ -75,15 +75,16 @@ int main() {
         }
         break;
 
+        case Event::Resized:
+        win.setView(View(FloatRect(0, 0, e.size.width, e.size.height)));
+        break;
+
         default:
         break;
       }
     }
     delta = delta_clock.restart().asSeconds();
 
-    p.actions(level->data, Keyboard::isKeyPressed(Keyboard::Up), Keyboard::isKeyPressed(Keyboard::Left),
-        Keyboard::isKeyPressed(Keyboard::Down), Keyboard::isKeyPressed(Keyboard::Right),
-        Keyboard::isKeyPressed(Keyboard::LShift));
     p.update(delta, level->data);
 
     if (level->loaded && p.y < 0 && level->neighbour[Level::Neighbour::TOP].id) {

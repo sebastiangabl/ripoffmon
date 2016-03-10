@@ -13,7 +13,8 @@
 class Player: public Entity {
   public:
     Player(int = 0, int = 0);
-    void actions(LevelData*, bool, bool, bool, bool, bool);
+
+    void performActions(LevelData*);
 
     virtual void draw(sf::RenderTarget&, sf::RenderStates) const;
 };

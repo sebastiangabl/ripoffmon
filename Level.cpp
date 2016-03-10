@@ -103,6 +103,7 @@ Level::~Level() {
 }
 
 bool Level::load(const char* fname) {
+  Clock c;
   File f;
   if (!f.open(fname, fstream::in | fstream::binary)) {
     cerr << "Failed to load level \"" << fname << "\"!\n";

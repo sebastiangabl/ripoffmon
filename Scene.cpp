@@ -14,6 +14,7 @@
 #include <SFML/System/Vector2.hpp>
 #include <algorithm>
 #include <cmath>
+#include <iostream>
 
 #include "Flags.h"
 #include "Level.h"
@@ -161,6 +162,13 @@ void Scene::draw(sf::RenderTarget& rt, sf::RenderStates rs) const {
   Vector2f source_size(texture.getSize());
   Vector2f target_size(rt.getSize());
   Sprite sprite(texture.getTexture());
-  sprite.setScale(target_size.x / source_size.x, target_size.y / source_size.y);
+  //float ratio = source_size.x / source_size.y;
+
+  float xscale = target_size.x / source_size.x;
+  float yscale = target_size.y / source_size.y;
+
+  sprite.setPosition(xscale > yscale ? (xscale - yscale) * (source_size.x / 2) : 0, yscale > xscale ? (yscale - xscale) * (source_size.y / 2) : 0);
+  sprite.setScale(min(xscale, yscale), min(xscale, yscale));
+
   rt.draw(sprite, rs);
 }

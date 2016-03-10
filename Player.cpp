@@ -13,9 +13,9 @@
 #include <SFML/Graphics/RenderStates.hpp>
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <SFML/System/Vector2.hpp>
+#include <SFML/Window/Keyboard.hpp>
 #include <cmath>
 #include <queue>
-#include <utility>
 
 #include "LevelData.h"
 
@@ -27,10 +27,12 @@ Player::Player(int xx, int yy) :
 
 }
 
-void Player::actions(LevelData* data, bool up, bool left, bool down, bool right, bool run) {
-  if (!action_queue.empty()) {
-    return;
-  }
+void Player::performActions(LevelData* data) {
+  bool right = Keyboard::isKeyPressed(Keyboard::Right);
+  bool up = Keyboard::isKeyPressed(Keyboard::Up);
+  bool left = Keyboard::isKeyPressed(Keyboard::Left);
+  bool down = Keyboard::isKeyPressed(Keyboard::Down);
+  bool run = Keyboard::isKeyPressed(Keyboard::LShift);
 
   switch (movement) {
     case LevelData::LEDGE_RIGHT:

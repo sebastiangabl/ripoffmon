@@ -52,14 +52,17 @@ class Entity: public sf::Drawable {
     Behaviour behaviour;
     Uint8 on_floor;
     Uint8 movement;
-    bool blocking;
     bool visible;
-    Uint16 warp, flag;
+    Uint16 flag;
 
     Entity(short = 0, short = 0, Uint16 = 0);
     virtual ~Entity();
+
     void update(float, LevelData*);
+    virtual void performActions(LevelData*);
+
     void updateFloor(LevelData*);
+
     void setPosition(int, int);
     void move(int, int);
     bool canMove(int, int, LevelData*);
