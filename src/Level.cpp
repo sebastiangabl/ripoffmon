@@ -128,11 +128,11 @@ bool Level::load(const char* fname) {
   // Flags
   flags = f.read<Uint8>();
 
+  // TileSet
+  tiles = TileSetManager::getTileSet(f.read<Uint8>());
+
   // Music
   music = f.read<Uint8>();
-
-  // TileSet
-  tiles = TileSetManager::getTileSet(1);
 
   // Data
   for (unsigned i = 0; i < (unsigned) width * (unsigned) height; i++) {

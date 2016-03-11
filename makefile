@@ -1,4 +1,4 @@
-CFLAGS = -Wall -std=c++11
+CFLAGS = -Wall -o3 -std=c++11
 LDFLAGS = -lsfml-audio -lsfml-graphics -lsfml-window -lsfml-system
 
 SRC = $(wildcard src/*.cpp) $(wildcard src/*/*.cpp)
@@ -15,8 +15,10 @@ else
 endif
 
 #default build
-all: $(OBJS)
-	g++ $(OBJS) -o $(NAME) $(LDFLAGS)
+all: $(NAME)
+
+$(NAME): $(OBJS)
+	g++ $(OBJS) -o $@ $(LDFLAGS)
 
 #special windows build to include exe information
 windows: $(OBJS)
