@@ -12,7 +12,6 @@
 #include <SFML/Graphics/RenderTexture.hpp>
 #include <SFML/Graphics/VertexArray.hpp>
 #include <SFML/System/Clock.hpp>
-//#include <set>
 #include <vector>
 
 #include "Entity.h"
@@ -30,7 +29,7 @@ class Level {
     void setVertexArrays(unsigned);
     void renderOutsideTexture(Uint16*, Uint16*);
   public:
-    static TileSet debug_tiles, tiles;
+    static TileSet debug_tiles;
 
     class Neighbour {
       public:
@@ -53,6 +52,7 @@ class Level {
     vector<Entity*> entities;
     Neighbour neighbour[4];
     Uint8 flags;
+    TileSet* tiles;
     Uint16 music;
 
     Level();

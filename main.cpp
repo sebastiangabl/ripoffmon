@@ -5,29 +5,20 @@
  *      Author: Sebastian
  */
 
-#include <SFML/Graphics/RenderWindow.hpp>
-#include <SFML/System/Clock.hpp>
-#include <SFML/System/Time.hpp>
-#include <SFML/Window/Event.hpp>
-#include <SFML/Window/Keyboard.hpp>
-#include <SFML/Window/VideoMode.hpp>
-#include <SFML/Window/WindowStyle.hpp>
+#include <SFML/Graphics.hpp>
 #include <iostream>
 
-#include "Level.h"
-#include "LevelData.h"
-#include "LevelManager.h"
+#include "Managers/LevelManager.h"
+#include "Managers/TileSetManager.h"
 #include "MusicLoop.h"
 #include "Player.h"
 #include "Scene.h"
-#include "TileSet.h"
 
 using namespace std;
 using namespace sf;
 
 int main() {
-  Level::debug_tiles.loadFromFile("tilesets/debug.png");
-  Level::tiles.loadFromFile("tilesets/tiles.png");
+  Level::debug_tiles.loadFromFile("tilesets/0.png");
 
   Level* level = LevelManager::getLevel(1);
 
@@ -37,7 +28,7 @@ int main() {
   float delta = 0;
   Clock delta_clock;
 
-  RenderWindow win(VideoMode(1280, 720), "Ripoffmon", Style::Titlebar | Style::Close | Style::Resize);
+  RenderWindow win(VideoMode(1280, 720), "Ripoffmon", Style::Close | Style::Resize);
   win.setFramerateLimit(0);
   win.setVerticalSyncEnabled(true);
   Scene scene(1280 / 4, 720 / 4);
@@ -58,6 +49,9 @@ int main() {
         break;
 
         case Event::KeyPressed:
+        if (e.key.code == Keyboard::Escape) {
+          win.close();
+        }
         if (e.key.code == Keyboard::Return) {
           if (music_stage == 0) {
             test1.fadeOut(milliseconds(200), true);
@@ -114,6 +108,7 @@ int main() {
     win.display();
   }
   LevelManager::free();
+  TileSetManager::free();
   cout << "Byebye!\n";
   return 0;
 }

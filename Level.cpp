@@ -7,20 +7,16 @@
 
 #include "Level.h"
 
-#include <SFML/Graphics/Color.hpp>
-#include <SFML/Graphics/PrimitiveType.hpp>
-#include <SFML/Graphics/Texture.hpp>
-#include <SFML/Graphics/Vertex.hpp>
-#include <SFML/System/Time.hpp>
-#include <SFML/System/Vector2.hpp>
+#include <SFML/Graphics.hpp>
 #include <iostream>
 
-#include "utils/File.h"
+#include "Managers/TileSetManager.h"
+#include "Utils/File.h"
 
 using namespace std;
 using namespace sf;
 
-TileSet Level::debug_tiles, Level::tiles;
+TileSet Level::debug_tiles;
 
 void Level::setVertexArrays(unsigned i) {
   unsigned x = i % data->width;
@@ -39,22 +35,22 @@ void Level::setVertexArrays(unsigned i) {
   va_debug[i * 4 + 3].texCoords = Vector2f(tile.x + TileSet::tile_size, tile.y);
 
   // Back
-  tile = tiles.getTileCoords(data->tiles_back[x][y]);
+  tile = tiles->getTileCoords(data->tiles_back[x][y]);
   va_back[i * 4 + 0].texCoords = Vector2f(tile.x, tile.y);
   va_back[i * 4 + 1].texCoords = Vector2f(tile.x, tile.y + TileSet::tile_size);
   va_back[i * 4 + 2].texCoords = Vector2f(tile.x + TileSet::tile_size, tile.y + TileSet::tile_size);
   va_back[i * 4 + 3].texCoords = Vector2f(tile.x + TileSet::tile_size, tile.y);
-  if (tiles.getTileFlags(data->tiles_back[x][y]) & TileSet::ANIMATED) {
+  if (tiles->getTileFlags(data->tiles_back[x][y]) & TileSet::ANIMATED) {
     animated_back.push_back(i);
   }
 
   // Front
-  tile = tiles.getTileCoords(data->tiles_front[x][y]);
+  tile = tiles->getTileCoords(data->tiles_front[x][y]);
   va_front[i * 4 + 0].texCoords = Vector2f(tile.x, tile.y);
   va_front[i * 4 + 1].texCoords = Vector2f(tile.x, tile.y + TileSet::tile_size);
   va_front[i * 4 + 2].texCoords = Vector2f(tile.x + TileSet::tile_size, tile.y + TileSet::tile_size);
   va_front[i * 4 + 3].texCoords = Vector2f(tile.x + TileSet::tile_size, tile.y);
-  if (tiles.getTileFlags(data->tiles_front[x][y]) & TileSet::ANIMATED) {
+  if (tiles->getTileFlags(data->tiles_front[x][y]) & TileSet::ANIMATED) {
     animated_front.push_back(i);
   }
 }
@@ -72,21 +68,21 @@ void Level::renderOutsideTexture(Uint16* back, Uint16* front) {
     va_back[i * 4 + 2].position = va_front[i * 4 + 2].position = Vector2f(x + 1, y + 1) * TileSet::tile_size;
     va_back[i * 4 + 3].position = va_front[i * 4 + 3].position = Vector2f(x + 1, y) * TileSet::tile_size;
 
-    Vector2u tile = tiles.getTileCoords(back[i]);
+    Vector2u tile = tiles->getTileCoords(back[i]);
     va_back[i * 4 + 0].texCoords = Vector2f(tile.x, tile.y);
     va_back[i * 4 + 1].texCoords = Vector2f(tile.x, tile.y + TileSet::tile_size);
     va_back[i * 4 + 2].texCoords = Vector2f(tile.x + TileSet::tile_size, tile.y + TileSet::tile_size);
     va_back[i * 4 + 3].texCoords = Vector2f(tile.x + TileSet::tile_size, tile.y);
 
-    tile = tiles.getTileCoords(front[i]);
+    tile = tiles->getTileCoords(front[i]);
     va_front[i * 4 + 0].texCoords = Vector2f(tile.x, tile.y);
     va_front[i * 4 + 1].texCoords = Vector2f(tile.x, tile.y + TileSet::tile_size);
     va_front[i * 4 + 2].texCoords = Vector2f(tile.x + TileSet::tile_size, tile.y + TileSet::tile_size);
     va_front[i * 4 + 3].texCoords = Vector2f(tile.x + TileSet::tile_size, tile.y);
   }
   texture_outside.clear(Color::Black);
-  texture_outside.draw(va_back, &tiles.texture);
-  texture_outside.draw(va_front, &tiles.texture);
+  texture_outside.draw(va_back, &tiles->texture);
+  texture_outside.draw(va_front, &tiles->texture);
   texture_outside.display();
   texture_outside.setRepeated(true);
 }
@@ -96,6 +92,7 @@ Level::Level() {
   data = 0;
   flags = 0;
   music = 0;
+  tiles = 0;
 }
 
 Level::~Level() {
@@ -133,6 +130,9 @@ bool Level::load(const char* fname) {
 
   // Music
   music = f.read<Uint8>();
+
+  // TileSet
+  tiles = TileSetManager::getTileSet(1);
 
   // Data
   for (unsigned i = 0; i < (unsigned) width * (unsigned) height; i++) {
@@ -180,14 +180,14 @@ void Level::render() {
     unsigned x = t % data->width;
     unsigned y = t / data->width;
     unsigned time = unsigned(animation_clock.getElapsedTime().asSeconds() * 4) % 8;
-    Vector2u tile = tiles.getTileCoords(data->tiles_back[x][y] + time);
+    Vector2u tile = tiles->getTileCoords(data->tiles_back[x][y] + time);
     va_back[t * 4 + 0].texCoords = Vector2f(tile.x, tile.y);
     va_back[t * 4 + 1].texCoords = Vector2f(tile.x, tile.y + TileSet::tile_size);
     va_back[t * 4 + 2].texCoords = Vector2f(tile.x + TileSet::tile_size, tile.y + TileSet::tile_size);
     va_back[t * 4 + 3].texCoords = Vector2f(tile.x + TileSet::tile_size, tile.y);
   }
   texture_back.clear(Color::Magenta);
-  texture_back.draw(va_back, &tiles.texture);
+  texture_back.draw(va_back, &tiles->texture);
   texture_back.display();
 
   for (unsigned i = 0; i < animated_front.size(); i++) {
@@ -195,13 +195,13 @@ void Level::render() {
     unsigned x = t % data->width;
     unsigned y = t / data->width;
     unsigned time = (unsigned) (animation_clock.getElapsedTime().asSeconds() * 4) % 8;
-    Vector2u tile = tiles.getTileCoords(data->tiles_front[x][y] + time);
+    Vector2u tile = tiles->getTileCoords(data->tiles_front[x][y] + time);
     va_front[t * 4 + 0].texCoords = Vector2f(tile.x, tile.y);
     va_front[t * 4 + 1].texCoords = Vector2f(tile.x, tile.y + TileSet::tile_size);
     va_front[t * 4 + 2].texCoords = Vector2f(tile.x + TileSet::tile_size, tile.y + TileSet::tile_size);
     va_front[t * 4 + 3].texCoords = Vector2f(tile.x + TileSet::tile_size, tile.y);
   }
   texture_front.clear(Color::Transparent);
-  texture_front.draw(va_front, &tiles.texture);
+  texture_front.draw(va_front, &tiles->texture);
   texture_front.display();
 }

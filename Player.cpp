@@ -7,14 +7,8 @@
 
 #include "Player.h"
 
-#include <SFML/Graphics/CircleShape.hpp>
-#include <SFML/Graphics/Color.hpp>
-#include <SFML/Graphics/RectangleShape.hpp>
-#include <SFML/Graphics/RenderStates.hpp>
-#include <SFML/Graphics/RenderTarget.hpp>
-#include <SFML/System/Vector2.hpp>
+#include <SFML/Graphics.hpp>
 #include <SFML/Window/Keyboard.hpp>
-#include <cmath>
 #include <queue>
 
 #include "LevelData.h"

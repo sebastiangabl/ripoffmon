@@ -13,7 +13,6 @@
 #include <SFML/Graphics/RenderStates.hpp>
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <queue>
-#include <utility>
 
 class LevelData;
 

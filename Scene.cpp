@@ -7,19 +7,14 @@
 
 #include "Scene.h"
 
-#include <SFML/Graphics/BlendMode.hpp>
-#include <SFML/Graphics/Color.hpp>
-#include <SFML/Graphics/Rect.hpp>
-#include <SFML/Graphics/Sprite.hpp>
-#include <SFML/System/Vector2.hpp>
+#include <SFML/Graphics.hpp>
 #include <algorithm>
-#include <cmath>
-#include <iostream>
+#include <ctime>
 
 #include "Flags.h"
 #include "Level.h"
 #include "LevelData.h"
-#include "LevelManager.h"
+#include "Managers/LevelManager.h"
 #include "TileSet.h"
 
 using namespace std;
@@ -28,6 +23,8 @@ using namespace sf;
 Scene::Scene(unsigned width, unsigned height) {
   view.setSize(width, height);
   texture.create(width, height);
+  daylight_cycle.loadFromFile("shaders/daylight_cycle.frag", Shader::Fragment);
+  daylight_cycle.setParameter("texture", Shader::CurrentTexture);
 }
 
 Scene::~Scene() {
@@ -42,7 +39,7 @@ void Scene::drawEntities(vector<Entity*> ents, Level* l) {
       continue;
     }
     texture.draw(*e);
-    if ((l->tiles.getTileFlags(l->data->tiles_front[e->x][e->y]) & TileSet::FOREGROUND) || (e->on_floor << 1) < l->data->floors[e->x][e->y]) {
+    if ((l->tiles->getTileFlags(l->data->tiles_front[e->x][e->y]) & TileSet::FOREGROUND) || (e->on_floor << 1) < l->data->floors[e->x][e->y]) {
       Sprite front(l->texture_front.getTexture(), IntRect(e->x * TileSet::tile_size, e->y * TileSet::tile_size, TileSet::tile_size, TileSet::tile_size));
       front.setPosition(e->x * TileSet::tile_size, e->y * TileSet::tile_size);
       texture.draw(front);
@@ -53,7 +50,7 @@ void Scene::drawEntities(vector<Entity*> ents, Level* l) {
       texture.draw(front);
     }
     if (e->prev_x >= 0 && e->prev_x < l->data->width && e->prev_y >= 0 && e->prev_y < l->data->height
-        && ((l->tiles.getTileFlags(l->data->tiles_front[e->prev_x][e->prev_y]) & TileSet::FOREGROUND)
+        && ((l->tiles->getTileFlags(l->data->tiles_front[e->prev_x][e->prev_y]) & TileSet::FOREGROUND)
             || (e->on_floor << 1) < l->data->floors[e->prev_x][e->prev_y])) {
       Sprite front(l->texture_front.getTexture(),
           IntRect(e->prev_x * TileSet::tile_size, e->prev_y * TileSet::tile_size, TileSet::tile_size, TileSet::tile_size));
@@ -156,19 +153,25 @@ void Scene::render(Level* l, Entity* e, bool debug) {
   }
 
   texture.display();
+
+  time_t t = time(0);
+  struct tm * now = localtime(&t);
+  daylight_cycle.setParameter("time", float(now->tm_hour) + float(now->tm_min) / 60.f);
 }
 
 void Scene::draw(sf::RenderTarget& rt, sf::RenderStates rs) const {
   Vector2f source_size(texture.getSize());
   Vector2f target_size(rt.getSize());
   Sprite sprite(texture.getTexture());
-  //float ratio = source_size.x / source_size.y;
 
   float xscale = target_size.x / source_size.x;
   float yscale = target_size.y / source_size.y;
 
-  sprite.setPosition(xscale > yscale ? (xscale - yscale) * (source_size.x / 2) : 0, yscale > xscale ? (yscale - xscale) * (source_size.y / 2) : 0);
+  sprite.setOrigin(source_size.x / 2, source_size.y / 2);
+  sprite.setPosition(target_size.x / 2, target_size.y / 2);
   sprite.setScale(min(xscale, yscale), min(xscale, yscale));
 
-  rt.draw(sprite, rs);
+  RenderStates r(rs);
+  r.shader = &daylight_cycle;
+  rt.draw(sprite, r);
 }

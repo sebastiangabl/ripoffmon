@@ -11,7 +11,7 @@
 #include <SFML/Config.hpp>
 #include <map>
 
-#include "Level.h"
+#include "../Level.h"
 
 using std::map;
 using sf::Uint16;

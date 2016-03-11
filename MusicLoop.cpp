@@ -7,16 +7,12 @@
 
 #include "MusicLoop.h"
 
-#include <SFML/System/Clock.hpp>
-#include <SFML/System/Lock.hpp>
-#include <algorithm>
-#include <cstddef>
-#include <iostream>
+#include <SFML/System.hpp>
 #include <map>
 #include <string>
 
-#include "utils/File.h"
-#include "utils/StringConverter.h"
+#include "Utils/File.h"
+#include "Utils/StringConverter.h"
 
 using namespace std;
 using namespace sf;
