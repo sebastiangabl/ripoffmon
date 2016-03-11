@@ -1,42 +1,45 @@
 # Level structure
 
-The level binaries are arranged like that (The filename is the level ID):
+The level's filename (minus extension) is it's ID in the engine. The level file layout looks like this:
 
-WIDTH             2 bytes (unsigned short)
-HEIGHT            2 bytes (unsigned short)
-
-NEIGHBOURS        16 bytes
-------------------------------------------
-  ID_RIGHT        2 bytes (unsigned short)
-  OFF_RIGHT       2 bytes (short)
-  ID_UP           2 bytes (unsigned short)
-  OFF_UP          2 bytes (short)
-  ID_LEFT         2 bytes (unsigned short)
-  OFF_LEFT        2 bytes (short)
-  ID_DOWN         2 bytes (unsigned short)
-  OFF_DOWN        2 bytes (short)
-
-FLAGS             1 byte
-MUSIC             1 byte
-  
-LEVEL DATA        6 * WIDTH * HEIGHT bytes
-------------------------------------------
-  MOVEMENT        1 byte
-  FLOOR           1 byte
-  BACK TILE       2 bytes (unsigned short)
-  FRONT TILE      2 bytes (unsigned short)
-  
-OUTSIDE TILES     2 * 8 bytes
-------------------------------------------
-  T-R BACK        2 bytes (unsigned short)
-  T-R FRONT       2 bytes (unsigned short)
-  T-L BACK        2 bytes (unsigned short)
-  T-L FRONT       2 bytes (unsigned short)
-  B-R BACK        2 bytes (unsigned short)
-  B-R FRONT       2 bytes (unsigned short)
-  B-L BACK        2 bytes (unsigned short)
-  B-L FRONT       2 bytes (unsigned short)
-  
-ENTITIES          varies
-------------------------------------------
-  TYPE            1 byte
+__SIZE__ | __4 bytes__ | __Type__
+---- | ---- | ----
+WIDTH | 2 bytes | unsigned short
+HEIGHT | 2 bytes | unsigned short
+|
+__NEIGHBOURS__ | __16 bytes__ | __Type__
+ID_RIGHT | 2 bytes | unsigned short
+OFF_RIGHT | 2 bytes | short
+ID_UP | 2 bytes | unsigned short
+OFF_UP | 2 bytes | short
+ID_LEFT | 2 bytes | unsigned short
+OFF_LEFT | 2 bytes | short
+ID_DOWN | 2 bytes | unsigned short
+OFF_DOWN | 2 bytes | short
+|
+__SETTINGS__ | __2 bytes__ | __Type__
+FLAGS | 1 byte | unsigned char
+TILESET | 1 byte | unsigned char
+MUSIC | 1 byte | unsigned char
+|
+__LEVEL DATA__ | __6 * WIDTH * HEIGHT bytes__ | __Type__
+MOVEMENT | 1 byte | unsigned char
+FLOOR | 1 byte | unsigned char
+BACK TILE ID | 2 bytes | unsigned short
+FRONT TILE ID | 2 bytes | unsigned short
+|
+__OUTSIDE TILES__ | __2 * 8 bytes__ | __Type__
+TOP-RIGHT BACK | 2 bytes | unsigned short
+TOP-RIGHT FRONT | 2 bytes | unsigned short
+TOP-LEFT BACK | 2 bytes | unsigned short
+TOP-LEFT FRONT | 2 bytes | unsigned short
+BOTTOM-RIGHT BACK | 2 bytes | unsigned short
+BOTTOM-RIGHT FRONT | 2 bytes | unsigned short
+BOTTOM-LEFT BACK | 2 bytes | unsigned short
+BOTTOM-LEFT FRONT | 2 bytes | unsigned short
+| 
+__SCRIPTS__ |
+|
+__WARPS__ |
+|
+__ENTITIES__ |
