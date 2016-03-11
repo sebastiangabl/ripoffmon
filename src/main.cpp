@@ -109,7 +109,6 @@ int main() {
   }
   LevelManager::free();
   TileSetManager::free();
-  cout << "Byebye!\n";
   return 0;
 }
 
