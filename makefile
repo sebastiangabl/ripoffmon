@@ -1,5 +1,5 @@
 CFLAGS = -Wall -std=c++11
-LDFLAGS = -lsfml-audio -lsfml-graphics -lsfml-window -lsfml-system -lsfml-main
+LDFLAGS = -lsfml-audio -lsfml-graphics -lsfml-window -lsfml-system
 
 SRC = $(wildcard src/*.cpp) $(wildcard src/*/*.cpp)
 OBJS = $(SRC:src/%.cpp=obj/%.o)
