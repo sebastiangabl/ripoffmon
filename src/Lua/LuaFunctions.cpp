@@ -11,6 +11,12 @@
 
 using namespace std;
 
+FunctionMap LuaFunctions::getFunctionMap() {
+  FunctionMap map;
+  map["test"] = test;
+  return map;
+}
+
 vector<string> LuaFunctions::extractArguments(const char* data) {
   vector<string> r;
   unsigned pos = 0;

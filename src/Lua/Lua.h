@@ -19,22 +19,32 @@ using std::vector;
 
 typedef map<string, double(*)(const char*)> FunctionMap;
 
+class LuaArg {
+  public:
+    string s;
+    double n;
+    bool is_string, is_valid;
+
+    LuaArg();
+    LuaArg(string);
+    LuaArg(double);
+};
+
 class LuaScript {
   private:
     lua_State* L;
-    int err;
+    string file_name;
     static FunctionMap function_map;
   public:
     static int externCall(lua_State*);
     static void setFunctionMap(FunctionMap);
 
-    LuaScript(const char*);
+    LuaScript(string);
     ~LuaScript();
 
-    int callFunction(const char*, unsigned = 0, const char** = 0);
-    string getLastError();
+    int execute(LuaArg = LuaArg(), LuaArg = LuaArg(), LuaArg = LuaArg(), LuaArg = LuaArg(), LuaArg = LuaArg(), LuaArg = LuaArg());
 
-    void setVariable(const char*, float);
+    void setVariable(const char*, double);
     void setVariable(const char*, string);
 };
 

@@ -13,6 +13,27 @@ using namespace std;
 
 FunctionMap LuaScript::function_map;
 
+LuaArg::LuaArg() {
+  s = "";
+  n = 0;
+  is_string = false;
+  is_valid = false;
+}
+
+LuaArg::LuaArg(string arg) {
+  s = arg;
+  n = 0;
+  is_string = true;
+  is_valid = true;
+}
+
+LuaArg::LuaArg(double arg) {
+  s = "";
+  n = arg;
+  is_string = false;
+  is_valid = true;
+}
+
 int LuaScript::externCall(lua_State* L) {
   string function(luaL_checkstring(L, 1));
   FunctionMap::iterator f = function_map.find(function);
@@ -36,20 +57,12 @@ void LuaScript::setFunctionMap(FunctionMap map) {
   function_map = map;
 }
 
-LuaScript::LuaScript(const char* fname) {
+LuaScript::LuaScript(string fname) {
   L = luaL_newstate();
   luaL_openlibs(L);
-  err = 0;
-  int r = luaL_loadfile(L, fname);
-  if (!r) {
-    r = lua_pcall(L, 0, 0, 0);
-  }
-  if (r) {
-    err = r;
-  } else {
-    lua_pushcfunction(L, LuaScript::externCall);
-    lua_setglobal(L, "externCall");
-  }
+  file_name = fname;
+  lua_pushcfunction(L, LuaScript::externCall);
+  lua_setglobal(L, "externCall");
 }
 
 LuaScript::~LuaScript() {
@@ -58,26 +71,40 @@ LuaScript::~LuaScript() {
   }
 }
 
-int LuaScript::callFunction(const char* fn, unsigned argc, const char* argv[]) {
-  lua_getglobal(L, fn);
-  for (unsigned i = 0; i < argc; i++) {
-    lua_pushstring(L, argv[i]);
-  }
-  lua_pcall(L, argc, 0, 0);
-  return 1;
-}
+int LuaScript::execute(LuaArg a1, LuaArg a2, LuaArg a3, LuaArg a4, LuaArg a5, LuaArg a6) {
+  LuaArg args[] = {a1, a2, a3, a4, a5, a6};
 
-string LuaScript::getLastError() {
-  if (err) {
+  unsigned i = 0;
+  lua_newtable(L);
+  while (true) {
+    if (args[i].is_valid) {
+      lua_pushnumber(L, 1 + i);
+      if (args[i].is_string) {
+        lua_pushstring(L, args[i].s.c_str());
+      } else {
+        lua_pushnumber(L, args[i].n);
+      }
+      lua_rawset(L, -3);
+      i++;
+    } else {
+      break;
+    }
+  }
+  lua_setglobal(L, "arg");
+
+  int r = luaL_loadfile(L, file_name.c_str());
+  if (!r) {
+    r = lua_pcall(L, 0, 0, 0);
+  }
+  if (r) {
     string errstr(lua_tostring(L, -1));
     lua_pop(L, 1);
-    err = 0;
-    return errstr;
+    cerr << errstr << endl;
   }
-  return string();
+  return !r;
 }
 
-void LuaScript::setVariable(const char* vn, float val) {
+void LuaScript::setVariable(const char* vn, double val) {
   lua_pushnumber(L, val);
   lua_setglobal(L, vn);
 }

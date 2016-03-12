@@ -19,12 +19,9 @@ using namespace std;
 using namespace sf;
 
 int main() {
-  FunctionMap fm;
-  fm["test"] = LuaFunctions::test;
-  LuaScript::setFunctionMap(fm);
-  LuaScript scr("scripts/test.lua");
-  const char* args[] = {"Hello World!", "random stuff", "nothing"};
-  scr.callFunction("test", 3, args);
+  LuaScript::setFunctionMap(LuaFunctions::getFunctionMap());
+  LuaScript scr("scripts/1.lua");
+  scr.execute(LuaArg("STRING"), LuaArg(1337));
 
   Level::debug_tiles.loadFromFile("tilesets/0.png");
 

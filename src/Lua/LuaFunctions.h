@@ -17,6 +17,7 @@ class LuaFunctions {
   private:
     static vector<string> extractArguments(const char*);
   public:
+    static FunctionMap getFunctionMap();
     static double test(const char*);
 };
 
