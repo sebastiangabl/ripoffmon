@@ -118,7 +118,8 @@ void Entity::update(float delta, LevelData* data) {
       prev_x = x;
       prev_y = y;
     }
-  } else {
+  } 
+  if (action_queue.empty()) {
     performActions(data);
   }
 }

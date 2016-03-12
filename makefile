@@ -1,4 +1,4 @@
-CFLAGS = -Wall -o3 -std=c++11
+CFLAGS = -Wall -O3 -std=c++11
 LDFLAGS = -lsfml-audio -lsfml-graphics -lsfml-window -lsfml-system
 
 SRC = $(wildcard src/*.cpp) $(wildcard src/*/*.cpp)
