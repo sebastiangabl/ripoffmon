@@ -1,15 +1,15 @@
 CFLAGS = -Wall -O3 -std=c++11
-LDFLAGS = -lsfml-audio -lsfml-graphics -lsfml-window -lsfml-system
+LDFLAGS = -lsfml-audio -lsfml-graphics -lsfml-window -lsfml-system -llua53
 
 SRC = $(wildcard src/*.cpp) $(wildcard src/*/*.cpp)
 OBJS = $(SRC:src/%.cpp=obj/%.o)
 
 ifeq ($(OS),Windows_NT)
-	build_folders := $(shell mkdir obj\Managers obj\Utils >nul 2>&1)
+	build_folders := $(shell mkdir obj\Managers obj\Utils obj\Lua >nul 2>&1)
 	NAME = ripoffmon.exe
 	CLEANCMD = del obj\*.o /s > nul 2>&1
 else
-	build_folders := $(shell mkdir -p obj/Managers obj/Utils)
+	build_folders := $(shell mkdir -p obj/Managers obj/Utils obj/Lua)
 	NAME = ripoffmon
 	CLEANCMD = rm obj/*.o -r > /dev/null 2>&1
 endif

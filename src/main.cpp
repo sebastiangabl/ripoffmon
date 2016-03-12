@@ -13,11 +13,19 @@
 #include "MusicLoop.h"
 #include "Player.h"
 #include "Scene.h"
+#include "Lua/LuaFunctions.h"
 
 using namespace std;
 using namespace sf;
 
 int main() {
+  FunctionMap fm;
+  fm["test"] = LuaFunctions::test;
+  LuaScript::setFunctionMap(fm);
+  LuaScript scr("scripts/test.lua");
+  const char* args[] = {"Hello World!", "random stuff", "nothing"};
+  scr.callFunction("test", 3, args);
+
   Level::debug_tiles.loadFromFile("tilesets/0.png");
 
   Level* level = LevelManager::getLevel(1);
