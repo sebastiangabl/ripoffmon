@@ -49,11 +49,11 @@ class Level {
     // General level stuff
     bool loaded;
     LevelData* data;
-    vector<Entity*> entities;
     Neighbour neighbour[4];
     Uint8 flags;
     TileSet* tiles;
     Uint16 music;
+    vector<Entity*> entities;
 
     Level();
     ~Level();
@@ -61,6 +61,7 @@ class Level {
     bool load(const char*);
     void save(const char*);
 
+    void update();
     void render();
 };
 

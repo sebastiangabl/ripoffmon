@@ -11,6 +11,7 @@
 #include <iostream>
 
 #include "Managers/TileSetManager.h"
+#include "Player.h"
 #include "Utils/File.h"
 
 using namespace std;
@@ -27,15 +28,8 @@ void Level::setVertexArrays(unsigned i) {
   va_debug[i * 4 + 2].position = va_back[i * 4 + 2].position = va_front[i * 4 + 2].position = Vector2f(x + 1, y + 1) * TileSet::tile_size;
   va_debug[i * 4 + 3].position = va_back[i * 4 + 3].position = va_front[i * 4 + 3].position = Vector2f(x + 1, y) * TileSet::tile_size;
 
-  // Debug
-  Vector2u tile = debug_tiles.getTileCoords(data->movement[x][y]);
-  va_debug[i * 4 + 0].texCoords = Vector2f(tile.x, tile.y);
-  va_debug[i * 4 + 1].texCoords = Vector2f(tile.x, tile.y + TileSet::tile_size);
-  va_debug[i * 4 + 2].texCoords = Vector2f(tile.x + TileSet::tile_size, tile.y + TileSet::tile_size);
-  va_debug[i * 4 + 3].texCoords = Vector2f(tile.x + TileSet::tile_size, tile.y);
-
   // Back
-  tile = tiles->getTileCoords(data->tiles_back[x][y]);
+  Vector2u tile = tiles->getTileCoords(data->tiles_back[x][y]);
   va_back[i * 4 + 0].texCoords = Vector2f(tile.x, tile.y);
   va_back[i * 4 + 1].texCoords = Vector2f(tile.x, tile.y + TileSet::tile_size);
   va_back[i * 4 + 2].texCoords = Vector2f(tile.x + TileSet::tile_size, tile.y + TileSet::tile_size);
@@ -167,11 +161,29 @@ bool Level::load(const char* fname) {
   return true;
 }
 
+void Level::update() {
+  // Update all entities
+  /*for (unsigned i = 0; i < entities.size(); i++) {
+    entities[i]->update(data);
+  }*/
+}
+
 void Level::render() {
   if (!loaded) {
     return;
   }
   texture_debug.clear(Color::Magenta);
+  for (unsigned i = 0; i < unsigned(data->width) * unsigned(data->height); i++) {
+    unsigned x = i % data->width;
+    unsigned y = i / data->width;
+
+    // Debug
+    Vector2u tile = debug_tiles.getTileCoords((data->movement[x][y] & LevelData::TEMP_BLOCKED) ? 0 : data->movement[x][y]);
+    va_debug[i * 4 + 0].texCoords = Vector2f(tile.x, tile.y);
+    va_debug[i * 4 + 1].texCoords = Vector2f(tile.x, tile.y + TileSet::tile_size);
+    va_debug[i * 4 + 2].texCoords = Vector2f(tile.x + TileSet::tile_size, tile.y + TileSet::tile_size);
+    va_debug[i * 4 + 3].texCoords = Vector2f(tile.x + TileSet::tile_size, tile.y);
+  }
   texture_debug.draw(va_debug, &debug_tiles.texture);
   texture_debug.display();
 

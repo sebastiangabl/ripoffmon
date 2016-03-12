@@ -11,8 +11,12 @@
 #include "Entity.h"
 
 class Player: public Entity {
+  private:
+    static Player* instance;
+    Player();
+    Player(Player&);
   public:
-    Player(int = 0, int = 0);
+    static Player* get();
 
     void performActions(LevelData*);
 

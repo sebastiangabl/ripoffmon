@@ -33,7 +33,8 @@ class Scene: public sf::Drawable {
   public:
     Scene(unsigned, unsigned);
     ~Scene();
-    void render(Level*, Entity*, bool = false);
+
+    void updateAndRender(Level*, Entity*, bool = false);
 
     virtual void draw(sf::RenderTarget&, sf::RenderStates) const;
 };

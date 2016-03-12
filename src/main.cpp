@@ -13,16 +13,18 @@
 #include "MusicLoop.h"
 #include "Player.h"
 #include "Scene.h"
-#include "Script.h"
+#include "Utils/StringConverter.h"
+
 
 using namespace std;
 using namespace sf;
 
 double test(vector<string> arguments) {
-  cout << "test called with " << arguments.size() << " arguments" << endl;
+  cout << "test called with " << arguments.size() << " arguments:";
   for (unsigned i = 0; i < arguments.size(); i++) {
-    cout << "  " << arguments[i] << endl;
+    cout << "  \"" << arguments[i] << "\"";
   }
+  cout << endl;
   return 1;
 }
 
@@ -33,7 +35,7 @@ void luaTest() {
 
   LuaScript s("scripts/0.lua");
   vector<LuaArg> args;
-  args.push_back(LuaArg("Hello there"));
+  args.push_back(LuaArg("STRING"));
   args.push_back(LuaArg(1337));
   s.execute(args);
 }
@@ -43,10 +45,11 @@ int main() {
 
   Level::debug_tiles.loadFromFile("tilesets/0.png");
 
-  Level* level = LevelManager::getLevel(1);
+  Level* level = LevelManager::getCurrentLevel();
 
-  Player p(10, 10);
-  p.updateFloor(level->data);
+  Player* p = Player::get();
+  p->setPosition(10, 10);
+  p->updateFloor(level->data);
 
   float delta = 0;
   Clock delta_clock;
@@ -102,31 +105,30 @@ int main() {
     }
     delta = delta_clock.restart().asSeconds();
 
-    p.update(delta, level->data);
+    p->update(delta, level->data);
+    //cout << (unsigned)level->data->movement[p->x][p->y] << endl;
+    //cout.flush();
 
-    if (level->loaded && p.y < 0 && level->neighbour[Level::Neighbour::TOP].id) {
-      Level* nlev = LevelManager::getLevel(level->neighbour[Level::Neighbour::TOP].id);
-      p.move(-level->neighbour[Level::Neighbour::TOP].offset, nlev->data->height);
-      p.updateFloor(nlev->data);
-      level = nlev;
-    } else if (level->loaded && p.y > level->data->height - 1 && level->neighbour[Level::Neighbour::BOTTOM].id) {
-      Level* nlev = LevelManager::getLevel(level->neighbour[Level::Neighbour::BOTTOM].id);
-      p.move(-level->neighbour[Level::Neighbour::BOTTOM].offset, -level->data->height);
-      p.updateFloor(nlev->data);
-      level = nlev;
-    } else if (level->loaded && p.x < 0 && level->neighbour[Level::Neighbour::LEFT].id) {
-      Level* nlev = LevelManager::getLevel(level->neighbour[Level::Neighbour::LEFT].id);
-      p.move(nlev->data->width, -level->neighbour[Level::Neighbour::LEFT].offset);
-      p.updateFloor(nlev->data);
-      level = nlev;
-    } else if (level->loaded && p.x > level->data->width - 1 && level->neighbour[Level::Neighbour::RIGHT].id) {
-      Level* nlev = LevelManager::getLevel(level->neighbour[Level::Neighbour::RIGHT].id);
-      p.move(-level->data->width, -level->neighbour[Level::Neighbour::RIGHT].offset);
-      p.updateFloor(nlev->data);
-      level = nlev;
+    if (level->loaded && p->y < 0 && level->neighbour[Level::Neighbour::TOP].id) {
+      Level* nlev = LevelManager::changeLevel(level->neighbour[Level::Neighbour::TOP].id);
+      p->setPosition(-level->neighbour[Level::Neighbour::TOP].offset, nlev->data->height, true);
+      p->updateFloor(nlev->data);
+    } else if (level->loaded && p->y > level->data->height - 1 && level->neighbour[Level::Neighbour::BOTTOM].id) {
+      Level* nlev = LevelManager::changeLevel(level->neighbour[Level::Neighbour::BOTTOM].id);
+      p->setPosition(-level->neighbour[Level::Neighbour::BOTTOM].offset,  -level->data->height, true);
+      p->updateFloor(nlev->data);
+    } else if (level->loaded && p->x < 0 && level->neighbour[Level::Neighbour::LEFT].id) {
+      Level* nlev = LevelManager::changeLevel(level->neighbour[Level::Neighbour::LEFT].id);
+      p->setPosition(nlev->data->width,  -level->neighbour[Level::Neighbour::LEFT].offset, true);
+      p->updateFloor(nlev->data);
+    } else if (level->loaded && p->x > level->data->width - 1 && level->neighbour[Level::Neighbour::RIGHT].id) {
+      Level* nlev = LevelManager::changeLevel(level->neighbour[Level::Neighbour::RIGHT].id);
+      p->setPosition(-level->data->width, -level->neighbour[Level::Neighbour::RIGHT].offset, true);
+      p->updateFloor(nlev->data);
     }
+    level = LevelManager::getCurrentLevel();
 
-    scene.render(level, &p, Keyboard::isKeyPressed(Keyboard::Space));
+    scene.updateAndRender(level, p, Keyboard::isKeyPressed(Keyboard::Space));
     win.draw(scene);
     win.display();
   }

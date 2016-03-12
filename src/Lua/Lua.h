@@ -17,8 +17,6 @@ using std::string;
 using std::map;
 using std::vector;
 
-typedef map<string, double(*)(vector<string>)> FunctionMap;
-
 class LuaArg {
   public:
     string s;
@@ -29,6 +27,8 @@ class LuaArg {
     LuaArg(string);
     LuaArg(double);
 };
+
+typedef map<string, double(*)(vector<string>)> FunctionMap;
 
 class LuaScript {
   private:

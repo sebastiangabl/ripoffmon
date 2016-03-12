@@ -16,8 +16,16 @@
 using namespace std;
 using namespace sf;
 
-Player::Player(int xx, int yy) :
-    Entity(xx, yy, 1) {
+Player* Player::instance = 0;
+
+Player* Player::get() {
+  if (!instance) {
+    instance = new Player();
+  }
+  return instance;
+}
+
+Player::Player() : Entity() {
 
 }
 

@@ -7,7 +7,6 @@
 
 #include "LuaScriptManager.h"
 
-#include "../Lua/LuaFunctions.h"
 #include "../Utils/StringConverter.h"
 
 using namespace std;

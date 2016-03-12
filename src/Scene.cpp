@@ -65,7 +65,7 @@ void Scene::drawEntities(vector<Entity*> ents, Level* l) {
   }
 }
 
-void Scene::render(Level* l, Entity* e, bool debug) {
+void Scene::updateAndRender(Level* l, Entity* e, bool debug) {
   if (!l || !l->loaded) {
     return;
   }
@@ -121,6 +121,7 @@ void Scene::render(Level* l, Entity* e, bool debug) {
   }
   // Render main level
   if (l && l->loaded) {
+    l->update();
     l->render();
     s.setPosition(0, 0);
     s.setTexture(l->texture_back.getTexture(), true);
