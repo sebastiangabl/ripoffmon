@@ -17,13 +17,13 @@ using std::string;
 using std::map;
 using std::vector;
 
-typedef map<string, double(*)(const char*)> FunctionMap;
+typedef map<string, double(*)(vector<string>)> FunctionMap;
 
 class LuaArg {
   public:
     string s;
     double n;
-    bool is_string, is_valid;
+    bool is_string;
 
     LuaArg();
     LuaArg(string);
@@ -42,7 +42,7 @@ class LuaScript {
     LuaScript(string);
     ~LuaScript();
 
-    int execute(LuaArg = LuaArg(), LuaArg = LuaArg(), LuaArg = LuaArg(), LuaArg = LuaArg(), LuaArg = LuaArg(), LuaArg = LuaArg());
+    int execute(vector<LuaArg> = vector<LuaArg>());
 
     void setVariable(const char*, double);
     void setVariable(const char*, string);

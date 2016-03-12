@@ -1,6 +1,5 @@
 #test(version)
-io.write("Test LUA script calling a c++ function\n")
+io.write("Test LUA script calling a c++ function (",_VERSION,")\n")
 externCall("test", 2, "Hello", "World")
 externCall("test", 1, "WOHOOOOO!")
-io.write("arg[1] = ",arg[1],", arg[2]=",arg[2],"\n")
 externCall("test", 2, arg[1], arg[2])

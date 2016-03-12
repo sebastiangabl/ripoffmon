@@ -17,21 +17,18 @@ LuaArg::LuaArg() {
   s = "";
   n = 0;
   is_string = false;
-  is_valid = false;
 }
 
 LuaArg::LuaArg(string arg) {
   s = arg;
   n = 0;
   is_string = true;
-  is_valid = true;
 }
 
 LuaArg::LuaArg(double arg) {
   s = "";
   n = arg;
   is_string = false;
-  is_valid = true;
 }
 
 int LuaScript::externCall(lua_State* L) {
@@ -42,13 +39,12 @@ int LuaScript::externCall(lua_State* L) {
     lua_pushnumber(L, -1);
     return 1;
   } else {
-    unsigned args = luaL_checknumber(L, 2);
-    string data;
-    for (unsigned i = 0; i < args; i++) {
-      string arg = luaL_checkstring(L, 3 + i);
-      data += char(arg.size()) + arg;
+    unsigned argc = luaL_checknumber(L, 2);
+    vector<string> args;
+    for (unsigned i = 0; i < argc; i++) {
+      args.push_back(luaL_checkstring(L, 3 + i));
     }
-    lua_pushnumber(L, f->second(data.c_str()));
+    lua_pushnumber(L, f->second(args));
     return 1;
   }
 }
@@ -71,24 +67,16 @@ LuaScript::~LuaScript() {
   }
 }
 
-int LuaScript::execute(LuaArg a1, LuaArg a2, LuaArg a3, LuaArg a4, LuaArg a5, LuaArg a6) {
-  LuaArg args[] = {a1, a2, a3, a4, a5, a6};
-
-  unsigned i = 0;
+int LuaScript::execute(vector<LuaArg> args) {
   lua_newtable(L);
-  while (true) {
-    if (args[i].is_valid) {
-      lua_pushnumber(L, 1 + i);
-      if (args[i].is_string) {
-        lua_pushstring(L, args[i].s.c_str());
-      } else {
-        lua_pushnumber(L, args[i].n);
-      }
-      lua_rawset(L, -3);
-      i++;
+  for (unsigned i = 0; i < args.size(); i++) {
+    lua_pushnumber(L, 1 + i);
+    if (args[i].is_string) {
+      lua_pushstring(L, args[i].s.c_str());
     } else {
-      break;
+      lua_pushnumber(L, args[i].n);
     }
+    lua_rawset(L, -3);
   }
   lua_setglobal(L, "arg");
 
@@ -100,6 +88,7 @@ int LuaScript::execute(LuaArg a1, LuaArg a2, LuaArg a3, LuaArg a4, LuaArg a5, Lu
     string errstr(lua_tostring(L, -1));
     lua_pop(L, 1);
     cerr << errstr << endl;
+    cerr.flush();
   }
   return !r;
 }

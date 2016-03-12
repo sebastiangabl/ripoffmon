@@ -5,11 +5,11 @@ SRC = $(wildcard src/*.cpp) $(wildcard src/*/*.cpp)
 OBJS = $(SRC:src/%.cpp=obj/%.o)
 
 ifeq ($(OS),Windows_NT)
-	build_folders := $(shell mkdir obj\Managers obj\Utils obj\Lua >nul 2>&1)
+	build_folders := $(shell mkdir obj\Creature obj\Lua obj\Managers obj\Utils >nul 2>&1)
 	NAME = ripoffmon.exe
 	CLEANCMD = del obj\*.o /s > nul 2>&1
 else
-	build_folders := $(shell mkdir -p obj/Managers obj/Utils obj/Lua)
+	build_folders := $(shell mkdir -p obj/Creature obj/Lua obj/Managers obj/Utils obj/Lua)
 	NAME = ripoffmon
 	CLEANCMD = rm obj/*.o -r > /dev/null 2>&1
 endif

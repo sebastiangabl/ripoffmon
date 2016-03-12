@@ -13,15 +13,33 @@
 #include "MusicLoop.h"
 #include "Player.h"
 #include "Scene.h"
-#include "Lua/LuaFunctions.h"
+#include "Script.h"
 
 using namespace std;
 using namespace sf;
 
+double test(vector<string> arguments) {
+  cout << "test called with " << arguments.size() << " arguments" << endl;
+  for (unsigned i = 0; i < arguments.size(); i++) {
+    cout << "  " << arguments[i] << endl;
+  }
+  return 1;
+}
+
+void luaTest() {
+  FunctionMap map;
+  map["test"] = test;
+  LuaScript::setFunctionMap(map);
+
+  LuaScript s("scripts/0.lua");
+  vector<LuaArg> args;
+  args.push_back(LuaArg("Hello there"));
+  args.push_back(LuaArg(1337));
+  s.execute(args);
+}
+
 int main() {
-  LuaScript::setFunctionMap(LuaFunctions::getFunctionMap());
-  LuaScript scr("scripts/1.lua");
-  scr.execute(LuaArg("STRING"), LuaArg(1337));
+  luaTest();
 
   Level::debug_tiles.loadFromFile("tilesets/0.png");
 

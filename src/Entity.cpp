@@ -7,8 +7,8 @@
 
 #include "Entity.h"
 
-#include "Flags.h"
 #include "LevelData.h"
+#include "Managers/Flags.h"
 
 using namespace std;
 

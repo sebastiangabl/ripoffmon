@@ -11,9 +11,7 @@
 #include <algorithm>
 #include <ctime>
 
-#include "Flags.h"
-#include "Level.h"
-#include "LevelData.h"
+#include "Managers/Flags.h"
 #include "Managers/LevelManager.h"
 #include "TileSet.h"
 
