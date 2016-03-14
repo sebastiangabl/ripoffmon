@@ -198,7 +198,7 @@ void Level::render() {
     va_back[t * 4 + 2].texCoords = Vector2f(tile.x + TileSet::tile_size, tile.y + TileSet::tile_size);
     va_back[t * 4 + 3].texCoords = Vector2f(tile.x + TileSet::tile_size, tile.y);
   }
-  texture_back.clear(Color::Magenta);
+  texture_back.clear(Color::Black);
   texture_back.draw(va_back, &tiles->texture);
   texture_back.display();
 

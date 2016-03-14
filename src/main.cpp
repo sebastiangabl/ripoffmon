@@ -45,10 +45,10 @@ int main() {
 
   Level::debug_tiles.loadFromFile("tilesets/0.png");
 
-  Level* level = LevelManager::getCurrentLevel();
+  Level* level = LevelManager::changeLevel(1);
 
   Player* p = Player::get();
-  p->setPosition(10, 10);
+  p->setPosition(8, 7);
   p->updateFloor(level->data);
 
   float delta = 0;
@@ -106,8 +106,6 @@ int main() {
     delta = delta_clock.restart().asSeconds();
 
     p->update(delta, level->data);
-    //cout << (unsigned)level->data->movement[p->x][p->y] << endl;
-    //cout.flush();
 
     if (level->loaded && p->y < 0 && level->neighbour[Level::Neighbour::TOP].id) {
       Level* nlev = LevelManager::changeLevel(level->neighbour[Level::Neighbour::TOP].id);
