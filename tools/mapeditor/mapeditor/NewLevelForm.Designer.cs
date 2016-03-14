@@ -40,7 +40,7 @@
       this.groupBox1.Controls.Add(this.nudWidth);
       this.groupBox1.Controls.Add(this.label2);
       this.groupBox1.Controls.Add(this.label1);
-      this.groupBox1.Location = new System.Drawing.Point(13, 13);
+      this.groupBox1.Location = new System.Drawing.Point(12, 12);
       this.groupBox1.Name = "groupBox1";
       this.groupBox1.Size = new System.Drawing.Size(196, 59);
       this.groupBox1.TabIndex = 1;
@@ -111,11 +111,11 @@
       // 
       // btnOk
       // 
-      this.btnOk.Location = new System.Drawing.Point(134, 78);
+      this.btnOk.Location = new System.Drawing.Point(133, 77);
       this.btnOk.Name = "btnOk";
       this.btnOk.Size = new System.Drawing.Size(75, 23);
       this.btnOk.TabIndex = 0;
-      this.btnOk.Text = "OK";
+      this.btnOk.Text = "&OK";
       this.btnOk.UseVisualStyleBackColor = true;
       this.btnOk.Click += new System.EventHandler(this.btnOk_Click);
       // 
@@ -123,10 +123,12 @@
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-      this.ClientSize = new System.Drawing.Size(216, 106);
+      this.ClientSize = new System.Drawing.Size(221, 110);
       this.Controls.Add(this.btnOk);
       this.Controls.Add(this.groupBox1);
-      this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
+      this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+      this.MaximizeBox = false;
+      this.MinimizeBox = false;
       this.Name = "NewLevelForm";
       this.ShowIcon = false;
       this.ShowInTaskbar = false;

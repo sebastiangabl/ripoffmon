@@ -15,6 +15,7 @@ namespace mapeditor {
     public Vertex[][] vertices;
     public Vertex[] grid;
     public Rectangle selection;
+    public Point selectionStart;
 
     public ushort width, height;
     public ushort[] neighbourID = new ushort[4];
@@ -51,9 +52,9 @@ namespace mapeditor {
       win.Size = new Vector2u((uint)(width * MainForm.Inst.tileSize * scale), (uint)(height * MainForm.Inst.tileSize * scale));
       vertices = new Vertex[3][];
       grid = new Vertex[width * 2 + height * 2];
-      selection.Width = 1;
-      selection.Height = 1;
       setupVertices();
+      selectionStart.X = -1;
+      selectionStart.Y = -1;
     }
 
     private void setupVertices() {
@@ -153,20 +154,31 @@ namespace mapeditor {
       if (MainForm.Inst.tsmiViewGrid.Checked) {
         win.Draw(grid, PrimitiveType.Lines);
       }
-      if (selection.Width > 1 || selection.Height > 1) {
-        RectangleShape sel = new RectangleShape(new Vector2f(selection.Width * MainForm.Inst.tileSize - 1, selection.Height * MainForm.Inst.tileSize - 2));
-        sel.Position = new Vector2f(selection.X * MainForm.Inst.tileSize, selection.Y * MainForm.Inst.tileSize + 1);
+      Vector2i mpos = Mouse.GetPosition(win);
+      // Draw current selection
+      if (selection.Width > 0 && selection.Height > 0) {
+        RectangleShape sel = new RectangleShape(new Vector2f(selection.Width * MainForm.Inst.tileSize - 4, selection.Height * MainForm.Inst.tileSize - 4));
+        sel.Position = new Vector2f(selection.X * MainForm.Inst.tileSize + 2, selection.Y * MainForm.Inst.tileSize + 2);
         sel.FillColor = SFML.Graphics.Color.Transparent;
         sel.OutlineThickness = 2;
         win.Draw(sel);
       }
-
-      Vector2i mpos = Mouse.GetPosition(win);
-      RectangleShape r = new RectangleShape(new Vector2f(MainForm.Inst.tileSize, MainForm.Inst.tileSize));
-      r.Position = new Vector2f(MainForm.Inst.tileSize * ((int)(mpos.X / scale) / MainForm.Inst.tileSize), MainForm.Inst.tileSize * ((int)(mpos.Y / scale) / MainForm.Inst.tileSize));
-      r.OutlineColor = new SFML.Graphics.Color(255, 255, 255, 255);
-      r.FillColor = new SFML.Graphics.Color(255, 255, 255, 100);
-      win.Draw(r);
+      // Draw active selection process
+      if (selectionStart.X >= 0 && selectionStart.Y >= 0) {
+        RectangleShape sel = new RectangleShape(new Vector2f((mpos.X - selectionStart.X) / scale, (mpos.Y - selectionStart.Y) / scale));
+        sel.Position = new Vector2f(selectionStart.X / scale, selectionStart.Y / scale);
+        sel.FillColor = SFML.Graphics.Color.Transparent;
+        sel.OutlineThickness = 2;
+        win.Draw(sel);
+      }
+      if (MainForm.Inst.tsbToolSingle.Checked) {
+        RectangleShape r = new RectangleShape(new Vector2f(MainForm.Inst.tileSize, MainForm.Inst.tileSize));
+        r.Position = new Vector2f(MainForm.Inst.tileSize * ((int)(mpos.X / scale) / MainForm.Inst.tileSize), MainForm.Inst.tileSize * ((int)(mpos.Y / scale) / MainForm.Inst.tileSize));
+        r.OutlineColor = new SFML.Graphics.Color(255, 255, 255, 255);
+        r.FillColor = new SFML.Graphics.Color(255, 255, 255, 50);
+        win.Draw(r);
+      }
+      
       win.Display();
     }
 
@@ -177,11 +189,19 @@ namespace mapeditor {
     }
 
     protected override void OnMouseMove(MouseEventArgs e) {
-      Vector2f pos = new Vector2f(MainForm.Inst.tileSize * (Mouse.GetPosition(win).X / MainForm.Inst.tileSize), MainForm.Inst.tileSize * (Mouse.GetPosition(win).Y / MainForm.Inst.tileSize));
-      MainForm.Inst.tsslCoords.Text = "Mouse: " + pos.X + " | " + pos.Y;
+      base.OnMouseMove(e);
+      uint mx = (uint)(Mouse.GetPosition(win).X / scale) / MainForm.Inst.tileSize;
+      uint my = (uint)(Mouse.GetPosition(win).Y / scale) / MainForm.Inst.tileSize;
+      MainForm.Inst.tsslCoords.Text = mx + "/" + my;
     }
 
     protected override void OnMouseDown(MouseEventArgs e) {
+      base.OnMouseDown(e);
+      if (!MainForm.Inst.tsbToolSelect.Checked) {
+        return;
+      }
+      selectionStart.X = e.X;
+      selectionStart.Y = e.Y;
       int mx = e.X / (int)(MainForm.Inst.tileSize * scale);
       int my = e.Y / (int)(MainForm.Inst.tileSize * scale);
       selection.X = mx;
@@ -191,6 +211,12 @@ namespace mapeditor {
     }
 
     protected override void OnMouseUp(MouseEventArgs e) {
+      base.OnMouseUp(e);
+      if (!MainForm.Inst.tsbToolSelect.Checked) {
+        return;
+      }
+      selectionStart.X = -1;
+      selectionStart.Y = -1;
       int mx = e.X / (int)(MainForm.Inst.tileSize * scale);
       int my = e.Y / (int)(MainForm.Inst.tileSize * scale);
       if (mx < selection.X) {
@@ -205,6 +231,16 @@ namespace mapeditor {
       } else {
         selection.Height = my - selection.Y + 1;
       }
+      if (selection.X < 0) {
+        selection.Width += selection.X;
+        selection.X = 0;
+      }
+      if (selection.Y < 0) {
+        selection.Height += selection.Y;
+        selection.Y = 0;
+      }
+      selection.Width = Math.Min(selection.Width, width - selection.X);
+      selection.Height = Math.Min(selection.Height, height - selection.Y);
     }
 
     protected override void OnPaint(PaintEventArgs e) {
