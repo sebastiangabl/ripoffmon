@@ -10,6 +10,7 @@
 #include <SFML/Graphics.hpp>
 #include <algorithm>
 #include <ctime>
+#include <cmath>
 
 #include "Managers/Flags.h"
 #include "Managers/LevelManager.h"
@@ -21,8 +22,8 @@ using namespace sf;
 Scene::Scene(unsigned width, unsigned height) {
   view.setSize(width, height);
   texture.create(width, height);
-  daylight_cycle.loadFromFile("shaders/daylight_cycle.frag", Shader::Fragment);
-  daylight_cycle.setParameter("texture", Shader::CurrentTexture);
+  shader_lighting.loadFromFile("shaders/lighting.frag", Shader::Fragment);
+  shader_lighting.setUniform("texture", Shader::CurrentTexture);
 }
 
 Scene::~Scene() {
@@ -80,8 +81,8 @@ void Scene::updateAndRender(Level* l, Entity* e, bool debug) {
   Vector2f c = view.getCenter();
   Sprite out(l->texture_outside.getTexture(), IntRect(0, 0, size.x + TileSet::tile_size * 2, size.y + TileSet::tile_size * 2));
   out.setPosition(
-      Vector2f(floor((c.x - size.x / 2) / (TileSet::tile_size * 2)) * (TileSet::tile_size * 2),
-          floor((c.y - size.y / 2) / (TileSet::tile_size * 2)) * (TileSet::tile_size * 2)));
+      Vector2f(std::floor((c.x - size.x / 2) / (TileSet::tile_size * 2)) * (TileSet::tile_size * 2),
+          std::floor((c.y - size.y / 2) / (TileSet::tile_size * 2)) * (TileSet::tile_size * 2)));
   texture.draw(out);
 
   // Render neighbours
@@ -155,7 +156,8 @@ void Scene::updateAndRender(Level* l, Entity* e, bool debug) {
 
   time_t t = time(0);
   struct tm * now = localtime(&t);
-  daylight_cycle.setParameter("time", float(now->tm_hour) + float(now->tm_min) / 60.f);
+  //shader_lighting.setUniform("time", float(now->tm_hour) + float(now->tm_min) / 60.f);
+  shader_lighting.setUniform("time", (float(now->tm_sec) / 60.f) * 24.f);
 }
 
 void Scene::draw(sf::RenderTarget& rt, sf::RenderStates rs) const {
@@ -171,6 +173,6 @@ void Scene::draw(sf::RenderTarget& rt, sf::RenderStates rs) const {
   sprite.setScale(min(xscale, yscale), min(xscale, yscale));
 
   RenderStates r(rs);
-  r.shader = &daylight_cycle;
+  r.shader = &shader_lighting;
   rt.draw(sprite, r);
 }

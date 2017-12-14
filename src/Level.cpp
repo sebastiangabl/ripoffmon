@@ -50,7 +50,6 @@ void Level::setVertexArrays(unsigned i) {
 }
 
 void Level::renderOutsideTexture(Uint16* back, Uint16* front) {
-  texture_outside.create(TileSet::tile_size * 2, TileSet::tile_size * 2);
   VertexArray va_back(Quads, 2 * 2 * 4);
   VertexArray va_front(Quads, 2 * 2 * 4);
   for (unsigned i = 0; i < 4; i++) {
@@ -138,11 +137,15 @@ bool Level::load(const char* fname) {
   }
 
   // Outside Tiles
+  texture_outside.create(TileSet::tile_size * 2, TileSet::tile_size * 2);
+
   Uint16 o_back[4], o_front[4];
   for (unsigned i = 0; i < 4; i++) {
     o_back[i] = f.read<Uint16>();
     o_front[i] = f.read<Uint16>();
   }
+
+  renderOutsideTexture(o_back, o_front);
 
   // Entities
   while (!f.eof()) {
@@ -154,9 +157,8 @@ bool Level::load(const char* fname) {
   }
 
   f.close();
-  loaded = true;
 
-  renderOutsideTexture(o_back, o_front);
+  loaded = true;
 
   return true;
 }
@@ -172,6 +174,7 @@ void Level::render() {
   if (!loaded) {
     return;
   }
+
   texture_debug.clear(Color::Magenta);
   for (unsigned i = 0; i < unsigned(data->width) * unsigned(data->height); i++) {
     unsigned x = i % data->width;

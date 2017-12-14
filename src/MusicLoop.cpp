@@ -159,7 +159,7 @@ void MusicLoop::fadeOut(Time time, bool p) {
     return;
   }
   m_fading = true;
-  m_fading_thread = thread([=] {
+  m_fading_thread = thread([&] {
     float m = getVolume();
     float volume = 1;
     Clock c;
@@ -186,7 +186,7 @@ void MusicLoop::fadeIn(Time time, float m) {
     return;
   }
   m_fading = true;
-  m_fading_thread = thread([=] {
+  m_fading_thread = thread([&] {
     float volume = 0;
     play();
     Clock c;

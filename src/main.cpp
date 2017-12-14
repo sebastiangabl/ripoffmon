@@ -28,21 +28,7 @@ double test(vector<string> arguments) {
   return 1;
 }
 
-void luaTest() {
-  FunctionMap map;
-  map["test"] = test;
-  LuaScript::setFunctionMap(map);
-
-  LuaScript s("scripts/0.lua");
-  vector<LuaArg> args;
-  args.push_back(LuaArg("STRING"));
-  args.push_back(LuaArg(1337));
-  s.execute(args);
-}
-
 int main() {
-  luaTest();
-
   Level::debug_tiles.loadFromFile("tilesets/0.png");
 
   Level* level = LevelManager::changeLevel(1);

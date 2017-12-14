@@ -14,8 +14,6 @@
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <queue>
 
-#include "Lua/Lua.h"
-
 class LevelData;
 
 using std::queue;
@@ -54,7 +52,6 @@ class Entity: public sf::Drawable {
     Uint8 on_floor, movement;
     bool visible, blocking, activated;
     Uint16 flag, script;
-    vector<LuaArg> script_arguments;
 
     Entity(short = 0, short = 0);
     virtual ~Entity();

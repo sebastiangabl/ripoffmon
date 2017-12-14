@@ -1,8 +1,10 @@
 uniform sampler2D texture;
+uniform sampler2D lightmap;
 uniform float time;
 
 void main() {
     vec4 pixel = texture2D(texture, gl_TexCoord[0].xy);
+    vec4 light = vec4(0, 0, 0, 1);//texture2D(lightmap, gl_TexCoord[0].xy);
     
     vec4 blend = vec4(1, 1, 1, 1);
     float f = 0;
@@ -22,5 +24,5 @@ void main() {
       blend = vec4(0.2, 0.2, 0.8, 1);
     }
 
-    gl_FragColor = gl_Color * pixel * blend;
+    gl_FragColor = gl_Color * pixel * min(blend + light, vec4(1, 1, 1, 1));
 }

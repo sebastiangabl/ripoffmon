@@ -11,6 +11,7 @@
 #include <SFML/Graphics/RenderStates.hpp>
 #include <SFML/Graphics/RenderTexture.hpp>
 #include <SFML/Graphics/Shader.hpp>
+#include <SFML/Graphics/Vertex.hpp>
 #include <SFML/Graphics/View.hpp>
 #include <vector>
 
@@ -23,12 +24,14 @@ using sf::RenderTexture;
 using sf::View;
 using sf::Vector2u;
 using sf::Shader;
+using sf::Vertex;
 
 class Scene: public sf::Drawable {
   private:
     RenderTexture texture;
     View view;
-    Shader daylight_cycle;
+    Shader shader_lighting;
+    Vertex particles[100];
     void drawEntities(vector<Entity*>, Level*);
   public:
     Scene(unsigned, unsigned);

@@ -93,12 +93,13 @@ void Player::performActions(LevelData* data) {
   }
 }
 
+#define ABS(A) ((A) < 0 ? -A : A)
 void Player::draw(sf::RenderTarget& rt, sf::RenderStates rs) const {
   short off = 0;
   if (!action_queue.empty()) {
     ActionPair ap = action_queue.front();
     if (ap.first >= JUMP_RIGHT && ap.first <= JUMP_DOWN) {
-      off = -8 * (1 - abs((action_step - 0.5) * 2));
+      off = -8 * (1 - ABS((action_step - 0.5) * 2));
     }
   }
 
