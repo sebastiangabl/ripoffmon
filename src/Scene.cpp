@@ -9,7 +9,7 @@
 
 #include <SFML/Graphics.hpp>
 #include <algorithm>
-#include <ctime>
+#include <chrono>
 #include <cmath>
 
 #include "Managers/Flags.h"
@@ -19,11 +19,14 @@
 using namespace std;
 using namespace sf;
 
-Scene::Scene(unsigned width, unsigned height) {
+Scene::Scene(unsigned width, unsigned height) : time(0) {
   view.setSize(width, height);
   texture.create(width, height);
+  daylight_texture.loadFromFile("textures/daylight.png");
+  daylight_texture.setSmooth(true);
   shader_lighting.loadFromFile("shaders/lighting.frag", Shader::Fragment);
   shader_lighting.setUniform("texture", Shader::CurrentTexture);
+  shader_lighting.setUniform("daylight", daylight_texture);
 }
 
 Scene::~Scene() {
@@ -154,10 +157,9 @@ void Scene::updateAndRender(Level* l, Entity* e, bool debug) {
 
   texture.display();
 
-  time_t t = time(0);
-  struct tm * now = localtime(&t);
-  //shader_lighting.setUniform("time", float(now->tm_hour) + float(now->tm_min) / 60.f);
-  shader_lighting.setUniform("time", (float(now->tm_sec) / 60.f) * 24.f);
+  time += clock.restart().asSeconds();
+  time = time > 60 ? time - 60 : time;
+  shader_lighting.setUniform("time", time / 60.f);
 }
 
 void Scene::draw(sf::RenderTarget& rt, sf::RenderStates rs) const {
